@@ -1,0 +1,28 @@
+import type { LucideIcon } from "lucide-react";
+
+type Props = {
+  title: string;
+  description: string;
+  items: string[];
+  icon: LucideIcon;
+};
+
+export function ServiceCard({ title, description, items, icon: Icon }: Props) {
+  return (
+    <article className="flex flex-col rounded-2xl border border-slate-100 bg-white p-6 shadow-card">
+      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
+        <Icon className="h-6 w-6" aria-hidden />
+      </div>
+      <h3 className="mt-4 font-display text-lg font-bold text-brand-900">{title}</h3>
+      <p className="mt-2 text-sm text-slate-600">{description}</p>
+      <ul className="mt-4 space-y-2 text-sm text-slate-700">
+        {items.map((item) => (
+          <li key={item} className="flex gap-2">
+            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-amber" aria-hidden />
+            {item}
+          </li>
+        ))}
+      </ul>
+    </article>
+  );
+}
