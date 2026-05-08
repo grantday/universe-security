@@ -13,8 +13,8 @@ const items = [
 
 export function TrustStrip() {
   return (
-    <section className="border-b border-slate-100 bg-white py-10">
-      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-6 px-4 sm:grid-cols-3 sm:px-6 lg:grid-cols-5 lg:px-8">
+    <section className="border-y border-slate-200 bg-slate-50 py-10">
+      <div className="container-page grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
         {items.map((item, i) => {
           const Icon = item.icon;
           return (
@@ -26,10 +26,10 @@ export function TrustStrip() {
               transition={{ delay: i * 0.05 }}
               className="flex flex-col items-center text-center"
             >
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-brand-700 shadow-hairline">
                 <Icon className="h-5 w-5" aria-hidden />
               </div>
-              <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-slate-600 sm:text-sm">
+              <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-slate-700 sm:text-sm">
                 {item.label}
               </p>
             </motion.div>

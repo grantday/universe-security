@@ -7,9 +7,35 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-white text-slate-800 antialiased;
+    @apply bg-white text-slate-900 antialiased;
   }
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-brand-500;
+  }
+
+  a {
+    @apply underline-offset-4;
+  }
+
+  ::selection {
+    @apply bg-brand-100 text-brand-900;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+  .section {
+    @apply py-14 sm:py-20;
+  }
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-wide text-slate-500;
+  }
+  .card {
+    @apply rounded-2xl border border-slate-200/70 bg-white shadow-card;
+  }
+  .card-soft {
+    @apply rounded-2xl border border-slate-200/60 bg-slate-50 shadow-card;
   }
 }

@@ -5,11 +5,11 @@ type Variant = "primary" | "secondary" | "emergency";
 
 const variants: Record<Variant, string> = {
   primary:
-    "bg-brand-900 text-white hover:bg-brand-700 shadow-soft focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2",
+    "bg-brand-900 text-white hover:bg-brand-800 shadow-soft focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2",
   secondary:
-    "bg-white text-brand-900 border border-slate-200 hover:border-brand-500 hover:bg-brand-50 focus-visible:ring-2 focus-visible:ring-brand-500",
+    "bg-white text-slate-900 border border-slate-300 hover:border-slate-400 hover:bg-slate-50 shadow-hairline focus-visible:ring-2 focus-visible:ring-brand-500",
   emergency:
-    "bg-accent-red text-white hover:bg-red-700 shadow-md focus-visible:ring-2 focus-visible:ring-accent-red focus-visible:ring-offset-2",
+    "bg-accent-red text-white hover:bg-red-700 shadow-soft focus-visible:ring-2 focus-visible:ring-accent-red focus-visible:ring-offset-2",
 };
 
 type BaseProps = {
@@ -27,7 +27,7 @@ type ButtonAsLink = BaseProps &
 export function Button(props: ButtonAsButton | ButtonAsLink) {
   const { variant = "primary", className = "", children, ...rest } = props;
   const base =
-    "inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-colors disabled:opacity-50 disabled:pointer-events-none";
+    "inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-colors disabled:pointer-events-none disabled:opacity-50";
 
   if ("href" in rest && rest.href) {
     const { href, ...linkRest } = rest;
