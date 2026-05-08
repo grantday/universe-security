@@ -1,4 +1,4 @@
-import { Hero } from "@/components/home/Hero";
+import { HomeHeroSlider } from "@/components/home/HomeHeroSlider";
 import { TrustStrip } from "@/components/home/TrustStrip";
 import { CoreServices } from "@/components/home/CoreServices";
 import { ControlCentrePreview } from "@/components/home/ControlCentrePreview";
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
-      <Hero />
+      <HomeHeroSlider />
       <ScrollReveal>
         <TrustStrip />
       </ScrollReveal>
