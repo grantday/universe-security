@@ -1,5 +1,4 @@
-import { Building2, Factory, Home } from "lucide-react";
-import { ServiceCard } from "@/components/ServiceCard";
+import { ServicesSlider } from "@/components/home/ServicesSlider";
 
 export function CoreServices() {
   return (
@@ -14,41 +13,7 @@ export function CoreServices() {
             oversight to one operating model.
           </p>
         </div>
-        <div className="mt-12 grid gap-6 lg:grid-cols-3">
-          <ServiceCard
-            title="Home Security"
-            description="Residential protection with smart integration and panic pathways."
-            icon={Home}
-            items={[
-              "Alarm systems & monitoring",
-              "CCTV & perimeter protection",
-              "Smart integration",
-              "Panic response",
-            ]}
-          />
-          <ServiceCard
-            title="Business Security"
-            description="Commercial coverage with access control and transparent reporting."
-            icon={Building2}
-            items={[
-              "Guarding & patrols",
-              "Access control",
-              "CCTV monitoring",
-              "Risk assessments & asset protection",
-            ]}
-          />
-          <ServiceCard
-            title="Industrial Security"
-            description="High-risk environments, logistics, and loss prevention."
-            icon={Factory}
-            items={[
-              "Site guarding",
-              "Logistics escort",
-              "High-risk protection",
-              "Loss prevention",
-            ]}
-          />
-        </div>
+        <ServicesSlider />
       </div>
     </section>
   );
