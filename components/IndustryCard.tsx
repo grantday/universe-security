@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import { ArrowRight } from "lucide-react";
+import { PlaceholderImage } from "@/components/PlaceholderImage";
 
 type Props = {
   title: string;
@@ -10,7 +11,10 @@ type Props = {
 
 export function IndustryCard({ title, blurb, icon: Icon }: Props) {
   return (
-    <article className="group flex flex-col rounded-2xl border border-slate-100 bg-white p-6 shadow-card transition-shadow hover:shadow-soft">
+    <article className="group flex flex-col rounded-2xl border border-slate-200/70 bg-white p-6 shadow-card transition-shadow hover:shadow-soft">
+      <div className="mb-5 aspect-[16/10] w-full">
+        <PlaceholderImage seed={title} label={title} className="h-full w-full" />
+      </div>
       <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-brand-50 text-brand-700">
         <Icon className="h-5 w-5" aria-hidden />
       </div>

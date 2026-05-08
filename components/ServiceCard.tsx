@@ -1,4 +1,5 @@
 import type { LucideIcon } from "lucide-react";
+import { PlaceholderImage } from "@/components/PlaceholderImage";
 
 type Props = {
   title: string;
@@ -9,7 +10,10 @@ type Props = {
 
 export function ServiceCard({ title, description, items, icon: Icon }: Props) {
   return (
-    <article className="flex flex-col rounded-2xl border border-slate-100 bg-white p-6 shadow-card">
+    <article className="flex flex-col rounded-2xl border border-slate-200/70 bg-white p-6 shadow-card">
+      <div className="mb-5 aspect-[16/10] w-full">
+        <PlaceholderImage seed={title} label={title} className="h-full w-full" />
+      </div>
       <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
         <Icon className="h-6 w-6" aria-hidden />
       </div>

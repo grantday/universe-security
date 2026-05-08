@@ -3,6 +3,7 @@ import { Activity, MapPin, ShieldAlert, ScrollText } from "lucide-react";
 import { IncidentFlow } from "@/components/IncidentFlow";
 import { MockDashboard } from "@/components/MockDashboard";
 import { Button } from "@/components/Button";
+import { PlaceholderImage } from "@/components/PlaceholderImage";
 
 export const metadata: Metadata = {
   title: "Control Centre",
@@ -46,6 +47,17 @@ export default function ControlCentrePage() {
       </div>
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
         <IncidentFlow />
+        <div className="mt-10 grid gap-6 lg:grid-cols-3">
+          <div className="aspect-[16/10]">
+            <PlaceholderImage seed="Alarm" label="Alarm signal" className="h-full w-full" />
+          </div>
+          <div className="aspect-[16/10]">
+            <PlaceholderImage seed="Dispatch" label="Dispatch coordination" className="h-full w-full" />
+          </div>
+          <div className="aspect-[16/10]">
+            <PlaceholderImage seed="Response" label="Rapid response units" className="h-full w-full" />
+          </div>
+        </div>
         <div className="mt-16 grid gap-10 lg:grid-cols-2 lg:items-center">
           <div className="space-y-6">
             {features.map((f) => {
