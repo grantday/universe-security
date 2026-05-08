@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { themedOnlineImageUrl, type ImageTheme } from "@/lib/themed-images";
 
 function svgDataUri(svg: string) {
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
@@ -41,12 +42,20 @@ type Props = {
   seed: string;
   label: string;
   mode?: "online" | "svg";
+  theme?: ImageTheme;
   className?: string;
   priority?: boolean;
 };
 
-export function PlaceholderImage({ seed, label, mode = "online", className = "", priority = false }: Props) {
-  const online = `https://picsum.photos/seed/${encodeURIComponent(seed)}/1200/800`;
+export function PlaceholderImage({
+  seed,
+  label,
+  mode = "online",
+  theme,
+  className = "",
+  priority = false,
+}: Props) {
+  const online = theme ? themedOnlineImageUrl(theme, seed) : `https://picsum.photos/seed/${encodeURIComponent(seed)}/1200/800`;
   const src = mode === "online" ? online : svgDataUri(makeSvg(seed, label));
   return (
     <div className={`relative overflow-hidden rounded-2xl border border-slate-200/70 shadow-card ${className}`}>

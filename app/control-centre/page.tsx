@@ -49,13 +49,13 @@ export default function ControlCentrePage() {
         <IncidentFlow />
         <div className="mt-10 grid gap-6 lg:grid-cols-3">
           <div className="aspect-[16/10]">
-            <PlaceholderImage seed="Alarm" label="Alarm signal" className="h-full w-full" />
+            <PlaceholderImage seed="alarm" label="Alarm signal" theme="cctv" className="h-full w-full" />
           </div>
           <div className="aspect-[16/10]">
-            <PlaceholderImage seed="Dispatch" label="Dispatch coordination" className="h-full w-full" />
+            <PlaceholderImage seed="dispatch" label="Dispatch coordination" theme="dispatch" className="h-full w-full" />
           </div>
           <div className="aspect-[16/10]">
-            <PlaceholderImage seed="Response" label="Rapid response units" className="h-full w-full" />
+            <PlaceholderImage seed="response" label="Rapid response units" theme="response" className="h-full w-full" />
           </div>
         </div>
         <div className="mt-16 grid gap-10 lg:grid-cols-2 lg:items-center">

@@ -10,10 +10,28 @@ type Props = {
 };
 
 export function IndustryCard({ title, blurb, icon: Icon }: Props) {
+  const theme =
+    title === "Residential"
+      ? "residential"
+      : title === "Retail"
+        ? "business"
+        : title === "Banking"
+          ? "accessControl"
+          : title === "Construction"
+            ? "industrial"
+            : title === "Logistics"
+              ? "logistics"
+              : title === "Schools"
+                ? "schools"
+                : title === "Industrial"
+                  ? "industrial"
+                  : title === "Government"
+                    ? "government"
+                    : "events";
   return (
     <article className="group flex flex-col rounded-2xl border border-slate-200/70 bg-white p-6 shadow-card transition-shadow hover:shadow-soft">
       <div className="mb-5 aspect-[16/10] w-full">
-        <PlaceholderImage seed={title} label={title} className="h-full w-full" />
+        <PlaceholderImage seed={title} label={title} theme={theme} className="h-full w-full" />
       </div>
       <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-brand-50 text-brand-700">
         <Icon className="h-5 w-5" aria-hidden />
