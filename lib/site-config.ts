@@ -63,6 +63,7 @@ export const footerColumns = {
       { href: "/insights", label: "Insights" },
       { href: "/privacy", label: "Privacy Policy" },
       { href: "/terms", label: "Terms" },
+      { href: "/credits", label: "Image credits" },
       { href: "/contact", label: "Emergency contact" },
     ],
   },

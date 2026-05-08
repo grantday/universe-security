@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ccImages, type CcImageKey } from "@/lib/cc-images";
 
 function svgDataUri(svg: string) {
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
@@ -40,12 +41,13 @@ function makeSvg(seed: string, label: string) {
 type Props = {
   seed: string;
   label: string;
+  ccKey?: CcImageKey;
   className?: string;
   priority?: boolean;
 };
 
-export function PlaceholderImage({ seed, label, className = "", priority = false }: Props) {
-  const src = svgDataUri(makeSvg(seed, label));
+export function PlaceholderImage({ seed, label, ccKey, className = "", priority = false }: Props) {
+  const src = ccKey ? ccImages[ccKey].src : svgDataUri(makeSvg(seed, label));
   return (
     <div className={`relative overflow-hidden rounded-2xl border border-slate-200/70 shadow-card ${className}`}>
       <Image
