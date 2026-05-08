@@ -7,6 +7,7 @@ import { KpiSection } from "@/components/home/KpiSection";
 import { TestimonialsSection } from "@/components/home/TestimonialsSection";
 import { ContactCta } from "@/components/home/ContactCta";
 import type { Metadata } from "next";
+import { ScrollReveal } from "@/components/motion/ScrollReveal";
 
 export const metadata: Metadata = {
   title: "Intelligent security for Zimbabwe",
@@ -18,13 +19,27 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <TrustStrip />
-      <CoreServices />
-      <ControlCentrePreview />
-      <WhyChoose />
-      <KpiSection />
-      <TestimonialsSection />
-      <ContactCta />
+      <ScrollReveal>
+        <TrustStrip />
+      </ScrollReveal>
+      <ScrollReveal>
+        <CoreServices />
+      </ScrollReveal>
+      <ScrollReveal>
+        <ControlCentrePreview />
+      </ScrollReveal>
+      <ScrollReveal>
+        <WhyChoose />
+      </ScrollReveal>
+      <ScrollReveal>
+        <KpiSection />
+      </ScrollReveal>
+      <ScrollReveal>
+        <TestimonialsSection />
+      </ScrollReveal>
+      <ScrollReveal>
+        <ContactCta />
+      </ScrollReveal>
     </>
   );
 }
