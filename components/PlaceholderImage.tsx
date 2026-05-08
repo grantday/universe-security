@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { ccImages, type CcImageKey } from "@/lib/cc-images";
 
 function svgDataUri(svg: string) {
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
@@ -41,13 +40,14 @@ function makeSvg(seed: string, label: string) {
 type Props = {
   seed: string;
   label: string;
-  ccKey?: CcImageKey;
+  mode?: "online" | "svg";
   className?: string;
   priority?: boolean;
 };
 
-export function PlaceholderImage({ seed, label, ccKey, className = "", priority = false }: Props) {
-  const src = ccKey ? ccImages[ccKey].src : svgDataUri(makeSvg(seed, label));
+export function PlaceholderImage({ seed, label, mode = "online", className = "", priority = false }: Props) {
+  const online = `https://picsum.photos/seed/${encodeURIComponent(seed)}/1200/800`;
+  const src = mode === "online" ? online : svgDataUri(makeSvg(seed, label));
   return (
     <div className={`relative overflow-hidden rounded-2xl border border-slate-200/70 shadow-card ${className}`}>
       <Image
