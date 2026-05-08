@@ -25,6 +25,7 @@ export function HomeHeroSlider() {
   const [index, setIndex] = useState(0);
   const [dir, setDir] = useState<1 | -1>(1);
   const pausedRef = useRef(false);
+  const [tick, setTick] = useState(0);
 
   const slides: Slide[] = useMemo(
     () => [
@@ -80,11 +81,27 @@ export function HomeHeroSlider() {
 
   useEffect(() => {
     if (reduceMotion) return;
+    setTick(0);
     const id = window.setInterval(() => {
       if (!pausedRef.current) next();
     }, 7500);
     return () => window.clearInterval(id);
   }, [index, reduceMotion]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (reduceMotion) return;
+    const id = window.setInterval(() => {
+      if (!pausedRef.current) setTick((t) => (t + 1) % 1000000);
+    }, 120);
+    return () => window.clearInterval(id);
+  }, [reduceMotion]);
+
+  const accent =
+    active.id === "control"
+      ? "from-brand-100/70"
+      : active.id === "guards"
+        ? "from-slate-100/70"
+        : "from-brand-50/70";
 
   const variants = reduceMotion
     ? {
@@ -103,6 +120,7 @@ export function HomeHeroSlider() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(30,91,168,0.14),_transparent_55%)]" />
       <div className="pointer-events-none absolute -left-24 top-20 h-72 w-72 rounded-full bg-brand-100 blur-3xl" />
       <div className="pointer-events-none absolute -right-24 top-10 h-72 w-72 rounded-full bg-slate-100 blur-3xl" />
+      <div className={`pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b ${accent} to-transparent`} />
 
       <div
         className="container-page relative pb-16 pt-12 sm:pb-20 sm:pt-16 lg:pb-24 lg:pt-20"
@@ -151,7 +169,13 @@ export function HomeHeroSlider() {
             </AnimatePresence>
 
             <div className="mt-10 flex items-center justify-between gap-4">
-              <div className="flex gap-2" role="tablist" aria-label="Hero slides">
+              <div className="flex items-center gap-4">
+                <p className="text-xs font-semibold text-slate-500">
+                  {index + 1} / {slides.length}
+                  <span className="text-slate-300"> · </span>
+                  <span className="font-medium text-slate-500">Auto</span>
+                </p>
+                <div className="flex gap-2" role="tablist" aria-label="Hero slides">
                 {slides.map((s, i) => (
                   <button
                     key={s.id}
@@ -165,6 +189,7 @@ export function HomeHeroSlider() {
                     }`}
                   />
                 ))}
+              </div>
               </div>
               <div className="hidden items-center gap-2 sm:flex">
                 <button
@@ -184,6 +209,16 @@ export function HomeHeroSlider() {
                   <ChevronRight className="h-5 w-5" aria-hidden />
                 </button>
               </div>
+            </div>
+
+            <div className="mt-3 h-1.5 w-full max-w-[420px] overflow-hidden rounded-full bg-slate-200/80">
+              <motion.div
+                key={`${active.id}-progress-${tick}`}
+                initial={{ width: "0%" }}
+                animate={{ width: pausedRef.current || reduceMotion ? "0%" : "100%" }}
+                transition={{ duration: pausedRef.current || reduceMotion ? 0 : 7.5, ease: "linear" }}
+                className="h-full rounded-full bg-brand-700"
+              />
             </div>
           </div>
 
