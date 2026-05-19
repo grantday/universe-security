@@ -1,10 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  transpilePackages: ["sanity", "next-sanity"],
-  compiler: {
-    styledComponents: true,
-  },
   images: {
     remotePatterns: [
       {
@@ -13,7 +9,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "cdn.sanity.io",
+        hostname: "*.public.blob.vercel-storage.com",
       },
     ],
   },

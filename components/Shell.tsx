@@ -7,9 +7,9 @@ import { EmergencyButton } from "@/components/EmergencyButton";
 
 export function Shell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isStudio = pathname?.startsWith("/studio");
+  const isBare = pathname?.startsWith("/admin") || pathname?.startsWith("/studio");
 
-  if (isStudio) {
+  if (isBare) {
     return <>{children}</>;
   }
 
