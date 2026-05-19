@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Nav } from "@/components/Nav";
+import { SiteHeader } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { EmergencyButton } from "@/components/EmergencyButton";
 
@@ -15,8 +15,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <Nav />
-      <main className="min-h-screen pt-16">{children}</main>
+      <SiteHeader />
+      <main className="min-h-screen pt-[68px]">{children}</main>
       <Footer />
       <EmergencyButton />
     </>

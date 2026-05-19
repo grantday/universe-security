@@ -1,6 +1,6 @@
 import { put, list } from "@vercel/blob";
-import { readFile, writeFile } from "node:fs/promises";
-import path from "node:path";
+import { readFile, writeFile } from "fs/promises";
+import path from "path";
 import { defaultSiteContent } from "@/lib/content/defaults";
 import { siteContentSchema, type SiteContent } from "@/lib/content/schema";
 
@@ -51,7 +51,6 @@ async function writeBlob(content: SiteContent): Promise<void> {
   await put(BLOB_PATH, JSON.stringify(content, null, 2), {
     access: "public",
     addRandomSuffix: false,
-    allowOverwrite: true,
     contentType: "application/json",
   });
 }
