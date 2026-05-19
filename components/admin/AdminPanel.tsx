@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import type { SiteContent } from "@/lib/content/schema";
 import { useRouter } from "next/navigation";
-import { formatValidationErrors } from "@/lib/content/normalize";
+import { formatValidationErrors, prepareContentForSave } from "@/lib/content/normalize";
 import { AdminPanelBody } from "@/components/admin/AdminPanelBody";
 
 const TABS = ["Branding & site", "Hero slides", "Services", "KPIs & testimonials", "Home sections", "Pages"] as const;
@@ -36,20 +36,34 @@ export function AdminPanel() {
     if (!content) return;
     setSaving(true);
     setStatus("");
+    let payload;
+    try {
+      payload = prepareContentForSave(content);
+    } catch (err) {
+      setSaving(false);
+      setStatus(err instanceof Error ? err.message : "Invalid content in form");
+      return;
+    }
+
     const res = await fetch("/api/admin/content", {
       method: "PUT",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(content),
+      body: JSON.stringify(payload),
     });
     setSaving(false);
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
       const msg = (data as { error?: string }).error ?? "Save failed";
       const details = (data as { details?: unknown }).details;
+      if (res.status === 401) {
+        setStatus("Session expired — sign out and log in again, then retry.");
+        return;
+      }
       setStatus(details ? `${msg} — ${formatValidationErrors(details)}` : msg);
       return;
     }
+    setContent(payload);
     setStatus("Saved — changes go live on the site within a minute.");
     router.refresh();
   }
@@ -111,7 +125,15 @@ export function AdminPanel() {
 
         <AdminPanelBody tab={tab} content={content} setContent={setContent} onUploadLogo={uploadLogo} />
 
-        {status ? <p className="text-sm font-medium text-brand-700">{status}</p> : null}
+        {status ? (
+          <p
+            className={`rounded-lg px-4 py-3 text-sm font-medium ${
+              status.startsWith("Saved") ? "bg-brand-50 text-brand-800" : "bg-red-50 text-red-800"
+            }`}
+          >
+            {status}
+          </p>
+        ) : null}
 
         <button
           type="button"
@@ -123,7 +145,8 @@ export function AdminPanel() {
         </button>
 
         <p className="text-xs text-slate-500">
-          Part of this Vercel site. Set ADMIN_PASSWORD in Vercel; add Storage → Blob once for image uploads.
+          CMS editor v2 (full-site). If you only see &quot;Hero slide 1&quot;, hard-refresh this page (Ctrl+Shift+R). Saves
+          need Vercel Storage → Blob on this project.
         </p>
       </main>
     </div>

@@ -1,4 +1,4 @@
-import { head, put, list } from "@vercel/blob";
+import { del, head, put, list } from "@vercel/blob";
 import { readFile, writeFile } from "fs/promises";
 import path from "path";
 import { mergeContent } from "@/lib/content/merge";
@@ -43,6 +43,10 @@ async function readBlob(): Promise<SiteContent | null> {
 }
 
 async function writeBlob(content: SiteContent): Promise<void> {
+  const existing = await head(BLOB_PATH).catch(() => null);
+  if (existing?.url) {
+    await del(existing.url).catch(() => undefined);
+  }
   await put(BLOB_PATH, JSON.stringify(content, null, 2), {
     access: "public",
     addRandomSuffix: false,
@@ -61,6 +65,12 @@ export async function getSiteContent(): Promise<SiteContent> {
 export async function saveSiteContent(content: SiteContent): Promise<SiteContent> {
   const normalized = normalizeSiteContent(content);
   const parsed = siteContentSchema.parse(normalized);
+
+  if (process.env.VERCEL === "1" && !process.env.BLOB_READ_WRITE_TOKEN) {
+    throw new Error(
+      "Vercel Blob is not connected. Open your Vercel project → Storage → Create Blob store → Redeploy.",
+    );
+  }
 
   if (process.env.BLOB_READ_WRITE_TOKEN) {
     try {

@@ -11,20 +11,28 @@ function secret() {
   return new TextEncoder().encode(s);
 }
 
-export async function createAdminSession() {
-  const token = await new SignJWT({ role: "admin" })
+export function adminSessionCookieOptions() {
+  return {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax" as const,
+    path: "/",
+    maxAge: 60 * 60 * 12,
+  };
+}
+
+export async function signAdminSessionToken(): Promise<string> {
+  return new SignJWT({ role: "admin" })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime("12h")
     .sign(secret());
+}
 
-  cookies().set(COOKIE, token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 60 * 12,
-  });
+export async function createAdminSession() {
+  const token = await signAdminSessionToken();
+  cookies().set(COOKIE, token, adminSessionCookieOptions());
+  return token;
 }
 
 export async function clearAdminSession() {

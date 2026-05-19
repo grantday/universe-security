@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { createAdminSession, verifyAdminPassword } from "@/lib/content/auth";
+import { adminSessionCookieOptions, signAdminSessionToken, verifyAdminPassword } from "@/lib/content/auth";
 
 const bodySchema = z.object({ password: z.string().min(1) });
 
@@ -19,6 +19,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid password" }, { status: 401 });
   }
 
-  await createAdminSession();
-  return NextResponse.json({ ok: true });
+  const token = await signAdminSessionToken();
+  const response = NextResponse.json({ ok: true });
+  response.cookies.set("us_admin_session", token, adminSessionCookieOptions());
+  return response;
 }
