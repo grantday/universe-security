@@ -2,14 +2,18 @@ import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import { ArrowRight } from "lucide-react";
 import { PlaceholderImage } from "@/components/PlaceholderImage";
+import { getIcon } from "@/lib/content/icons";
+import type { IconKey } from "@/lib/content/schema";
 
 type Props = {
   title: string;
   blurb: string;
-  icon: LucideIcon;
+  icon?: LucideIcon;
+  iconKey?: IconKey;
 };
 
-export function IndustryCard({ title, blurb, icon: Icon }: Props) {
+export function IndustryCard({ title, blurb, icon, iconKey }: Props) {
+  const Icon = icon ?? getIcon(iconKey ?? "building2");
   const theme =
     title === "Residential"
       ? "residential"
@@ -28,6 +32,7 @@ export function IndustryCard({ title, blurb, icon: Icon }: Props) {
                   : title === "Government"
                     ? "government"
                     : "events";
+
   return (
     <article className="group flex flex-col rounded-2xl border border-slate-200/70 bg-white p-6 shadow-card transition-shadow hover:shadow-soft">
       <div className="mb-5 aspect-[16/10] w-full">

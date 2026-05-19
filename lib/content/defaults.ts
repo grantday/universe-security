@@ -90,8 +90,7 @@ export const defaultSiteContent: SiteContent = {
       org: "Industrial client, Zimbabwe",
     },
     {
-      quote:
-        "Professional guards, clear escalation paths, and a team that understands residential estates.",
+      quote: "Professional guards, clear escalation paths, and a team that understands residential estates.",
       author: "Estate Chairperson",
       org: "Residential estate",
     },
@@ -101,4 +100,164 @@ export const defaultSiteContent: SiteContent = {
     { label: "Active patrol units", value: "42", numericValue: 42 },
     { label: "Daily incidents handled", value: "120", suffix: "+", numericValue: 120 },
   ],
+  home: {
+    trustBadges: [
+      { icon: "clock", label: "24/7 Monitoring" },
+      { icon: "radio", label: "Rapid Response Units" },
+      { icon: "shieldCheck", label: "Licensed Security Personnel" },
+      { icon: "mapPin", label: "Real-Time Tracking" },
+      { icon: "users", label: "Multi-Site Coverage" },
+    ],
+    coreServices: {
+      heading: "Core security services",
+      intro:
+        "From smart homes to high-risk industrial sites, we align technology, trained personnel, and control-room oversight to one operating model.",
+    },
+    controlCentrePreview: {
+      heading: "Control Centre overview",
+      intro:
+        "Our centralised 24/7 operations hub manages alarms, patrols, and escalations in real time — with full traceability from signal to resolution.",
+      ctaHref: "/control-centre",
+      ctaLabel: "Explore the Control Centre",
+    },
+    whyChoose: {
+      heading: "Why choose Universe Security",
+      intro:
+        "We combine physical security with technology-led operations — so you get fewer blind spots and faster outcomes.",
+      pillars: [
+        { title: "Integrated systems", body: "Alarms, CCTV, access, and patrol data unified for faster decisions.", icon: "cpu" },
+        { title: "Centralised control", body: "One control room view across residential, commercial, and industrial sites.", icon: "shield" },
+        { title: "Trained personnel", body: "Licensed teams with clear SOPs and escalation paths.", icon: "headphones" },
+        { title: "Rapid response", body: "GPS-tracked units and prioritised dispatch when seconds matter.", icon: "zap" },
+        { title: "Transparent reporting", body: "Incident logs, audit trails, and client-ready summaries.", icon: "barChart3" },
+      ],
+    },
+    kpisSection: {
+      heading: "Response metrics",
+      intro: "Illustrative KPIs for marketing — replace with audited operational statistics.",
+    },
+    testimonialsSection: {
+      heading: "What clients say",
+      intro: "Feedback from residential and corporate partners who rely on our control-room-led model.",
+    },
+    contactCta: {
+      heading: "Ready for a security assessment?",
+      intro: "Tell us about your site. We will recommend a layered programme aligned to your risk profile.",
+      primaryCta: { href: "/contact", label: "Request assessment" },
+      secondaryCta: { href: "/control-centre", label: "See how we operate" },
+    },
+  },
+  pages: {
+    solutions: {
+      title: "Solutions",
+      intro:
+        "Home, business, industrial, and specialised security solutions — guarding, CCTV, access control, and control-room monitoring.",
+      sections: [
+        {
+          id: "home",
+          title: "Home Security",
+          lead: "Smart integration with panic pathways and perimeter protection.",
+          items: ["Alarm systems", "CCTV", "Smart integration", "Perimeter protection", "Panic response"],
+        },
+        {
+          id: "business",
+          title: "Business Security",
+          lead: "Guarding, access control, and risk-aligned assessments for commercial sites.",
+          items: ["Guarding", "Access control", "CCTV monitoring", "Risk assessments", "Asset protection"],
+        },
+        {
+          id: "industrial",
+          title: "Industrial Security",
+          lead: "High-risk sites, logistics movements, and loss prevention programmes.",
+          items: ["Site guarding", "Logistics escort", "High-risk protection", "Loss prevention"],
+        },
+        {
+          id: "specialised",
+          title: "Specialised Services",
+          lead: "Tailored teams for VIP protection, investigations, and major events.",
+          items: ["VIP protection", "Investigations", "Events & crowd support", "Bespoke deployments"],
+        },
+      ],
+    },
+    industries: {
+      title: "Industries",
+      intro: "Sector-specific playbooks backed by our 24/7 control centre and licensed response teams.",
+      items: [
+        { title: "Residential", blurb: "Estates and homes with smart alarms, CCTV, and patrol coordination.", icon: "building2" },
+        { title: "Retail", blurb: "Shrinkage control, after-hours monitoring, and visible deterrence.", icon: "shoppingBag" },
+        { title: "Banking", blurb: "High-trust environments with strict access and escalation protocols.", icon: "landmark" },
+        { title: "Construction", blurb: "Site guarding, perimeter breaches, and equipment protection.", icon: "hardHat" },
+        { title: "Logistics", blurb: "Depots, yards, and convoy escorts with GPS-backed response.", icon: "truck" },
+        { title: "Schools", blurb: "Safe campuses with controlled access and incident-ready communication.", icon: "school" },
+        { title: "Industrial", blurb: "High-risk plants and warehouses with layered physical + tech security.", icon: "warehouse" },
+        { title: "Government", blurb: "Compliance-led deployments with confidentiality and auditability.", icon: "shield" },
+        { title: "Events", blurb: "Crowd management, access zones, and emergency coordination.", icon: "partyPopper" },
+      ],
+    },
+    company: {
+      title: "Company",
+      mission: {
+        eyebrow: "Mission",
+        title: "Intelligent, responsive security",
+        body: "Deliver integrated protection that combines trained people, disciplined processes, and modern systems — so clients can operate with confidence.",
+      },
+      vision: {
+        eyebrow: "Vision",
+        title: "Regional security leader",
+        body: "Become the most trusted technology-driven security partner across Zimbabwe and neighbouring markets.",
+      },
+      valuesHeading: "Values",
+      values: [
+        { title: "Integrity", body: "We do what we say — transparent SLAs and honest reporting.", icon: "scale" },
+        { title: "Accountability", body: "Every incident has an owner from signal to closure.", icon: "target" },
+        { title: "Responsiveness", body: "Seconds matter — our control room is built for speed.", icon: "heartHandshake" },
+        { title: "Innovation", body: "We adopt tools that measurably reduce risk for clients.", icon: "lightbulb" },
+      ],
+      compliance: {
+        title: "Compliance",
+        body: "We maintain licensing appropriate to guarding and electronic security services, and treat client information under strict confidentiality agreements. Documentation is available during onboarding and renewal.",
+      },
+    },
+    controlCentre: {
+      heroTitle: "Control Centre",
+      heroIntro:
+        "Incident flow: Alarm → Control Room → Dispatch → Response → Resolution. One hub, full traceability.",
+      features: [
+        { title: "Live monitoring", body: "Unified alarm and CCTV signals with operator workflows and priority queues.", icon: "activity" },
+        { title: "GPS tracking", body: "Patrol and response units visible on-map for dispatch accuracy and SLA reporting.", icon: "mapPin" },
+        { title: "Escalation system", body: "Tiered alerts to supervisors, clients, and emergency services when thresholds are met.", icon: "shieldAlert" },
+        { title: "Audit trail", body: "Immutable logs from signal receipt through dispatch, on-site actions, and closure.", icon: "scrollText" },
+      ],
+      ctaLabel: "Book a control-centre walkthrough",
+      ctaHref: "/contact",
+    },
+    technology: {
+      title: "Technology",
+      intro: "Technology-led operations with pragmatic controls for confidentiality and uptime.",
+      stack: [
+        { title: "CCTV systems", body: "Site-wide visibility with remote review and retention policies.", icon: "camera" },
+        { title: "Alarm systems", body: "Intrusion and perimeter alarms integrated to the control room.", icon: "radio" },
+        { title: "GPS tracking", body: "Live unit tracking for patrol accountability and faster routing.", icon: "mapPinned" },
+        { title: "Mobile app", body: "Client and field workflows — coming soon on iOS and Android.", icon: "smartphone", badge: "Coming soon" },
+        { title: "Incident reporting", body: "Structured reports with attachments for insurers and internal compliance.", icon: "fileWarning" },
+      ],
+      dataSecurityHeading: "Data security",
+      dataSecurity: [
+        { title: "Encryption", body: "Data in transit protected with modern TLS configurations.", icon: "lock" },
+        { title: "Access control", body: "Role-based permissions for operators, supervisors, and clients.", icon: "keyRound" },
+        { title: "Audit logs", body: "Tamper-evident activity trails for critical configuration changes.", icon: "clipboardList" },
+      ],
+      ctaLabel: "Discuss your technology stack",
+      ctaHref: "/contact",
+    },
+    contact: {
+      title: "Contact",
+      intro: "Send an enquiry or call our team. For emergencies, use the hotline — monitored 24/7.",
+      formHeading: "Quick enquiry",
+      formIntro: "Fields marked by labels are required.",
+      emergencyHeading: "Emergency hotline",
+      emergencyNote: "For immediate threats to life or property — call now.",
+      officeHeading: "Office",
+    },
+  },
 };

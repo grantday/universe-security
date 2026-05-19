@@ -1,69 +1,21 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Shield } from "lucide-react";
-import { siteConfig } from "@/lib/site-config";
 import { Button } from "@/components/Button";
 import { PlaceholderImage } from "@/components/PlaceholderImage";
-import type { ImageTheme } from "@/lib/themed-images";
+import type { HeroSlide } from "@/lib/content/schema";
 
-type Slide = {
-  id: string;
-  eyebrow: string;
-  title: string;
-  body: string;
-  theme: ImageTheme;
-  seed: string;
-  ctaPrimary: { href: string; label: string };
-  ctaSecondary: { href: string; label: string };
-};
-
-export function HomeHeroSlider() {
+export function HomeHeroSlider({ slides }: { slides: HeroSlide[] }) {
   const reduceMotion = useReducedMotion();
   const [index, setIndex] = useState(0);
   const [dir, setDir] = useState<1 | -1>(1);
   const pausedRef = useRef(false);
   const [tick, setTick] = useState(0);
 
-  const slides: Slide[] = useMemo(
-    () => [
-      {
-        id: "control",
-        eyebrow: "Zimbabwe · 24/7 Control Centre",
-        title: siteConfig.tagline,
-        body: "Integrated protection for residential, commercial, and industrial environments — with rapid response you can trust.",
-        theme: "controlRoom",
-        seed: "home-control-room",
-        ctaPrimary: { href: "/contact", label: "Request security assessment" },
-        ctaSecondary: { href: `tel:${siteConfig.emergencyPhone}`, label: "Emergency response" },
-      },
-      {
-        id: "guards",
-        eyebrow: "Security Professionals",
-        title: "Licensed guards. Visible deterrence. Clear escalation.",
-        body: "Professional guarding and patrols aligned to your site’s SOPs and reporting requirements.",
-        theme: "guards",
-        seed: "home-guards",
-        ctaPrimary: { href: "/solutions#business", label: "Explore guarding" },
-        ctaSecondary: { href: "/contact", label: "Talk to us" },
-      },
-      {
-        id: "cctv",
-        eyebrow: "Integrated Technology",
-        title: "CCTV + alarms, monitored in real time.",
-        body: "Unified signals, structured operator workflows, and an audit trail from alarm to resolution.",
-        theme: "cctv",
-        seed: "home-cctv",
-        ctaPrimary: { href: "/technology", label: "See the technology" },
-        ctaSecondary: { href: "/control-centre", label: "Control Centre" },
-      },
-    ],
-    []
-  );
-
-  const active = slides[index]!;
+  const active = slides[index] ?? slides[0]!;
 
   function go(next: number) {
     const n = (next + slides.length) % slides.length;

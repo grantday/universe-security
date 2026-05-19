@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { AlertTriangle, Phone, X } from "lucide-react";
-import { siteConfig } from "@/lib/site-config";
 import { Button } from "@/components/Button";
+import type { SiteInfo } from "@/lib/content/site-types";
 
-export function EmergencyButton() {
+export function EmergencyButton({ site }: { site: SiteInfo }) {
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [message, setMessage] = useState("");
@@ -98,11 +98,11 @@ export function EmergencyButton() {
             </div>
             <div className="mt-6 flex flex-col gap-3">
               <a
-                href={`tel:${siteConfig.emergencyPhone}`}
+                href={`tel:${site.emergencyPhone}`}
                 className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-accent-red px-4 py-3 text-center text-sm font-semibold text-white hover:bg-red-700"
               >
                 <Phone className="h-4 w-4" aria-hidden />
-                Call {siteConfig.emergencyPhoneDisplay}
+                Call {site.emergencyPhoneDisplay}
               </a>
               <label className="text-xs font-medium text-slate-600" htmlFor="emergency-note">
                 Optional note for silent alert

@@ -4,8 +4,15 @@ import { usePathname } from "next/navigation";
 import { SiteHeader } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { EmergencyButton } from "@/components/EmergencyButton";
+import type { BrandingInfo, SiteInfo } from "@/lib/content/site-types";
 
-export function Shell({ children }: { children: React.ReactNode }) {
+type Props = {
+  children: React.ReactNode;
+  site: SiteInfo;
+  branding: BrandingInfo;
+};
+
+export function Shell({ children, site, branding }: Props) {
   const pathname = usePathname();
   const isBare = pathname?.startsWith("/admin") || pathname?.startsWith("/studio");
 
@@ -15,10 +22,10 @@ export function Shell({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <SiteHeader />
+      <SiteHeader site={site} branding={branding} />
       <main className="min-h-screen pt-[68px]">{children}</main>
-      <Footer />
-      <EmergencyButton />
+      <Footer site={site} branding={branding} />
+      <EmergencyButton site={site} />
     </>
   );
 }

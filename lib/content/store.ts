@@ -1,29 +1,17 @@
-import { put, list } from "@vercel/blob";
+import { head, put, list } from "@vercel/blob";
 import { readFile, writeFile } from "fs/promises";
 import path from "path";
-import { defaultSiteContent } from "@/lib/content/defaults";
+import { mergeContent } from "@/lib/content/merge";
+import { normalizeSiteContent } from "@/lib/content/normalize";
 import { siteContentSchema, type SiteContent } from "@/lib/content/schema";
 
 const BLOB_PATH = "site-content.json";
 const LOCAL_PATH = path.join(process.cwd(), "content", "site-content.json");
 
-function merge(partial: Partial<SiteContent>): SiteContent {
-  return siteContentSchema.parse({
-    ...defaultSiteContent,
-    ...partial,
-    site: { ...defaultSiteContent.site, ...partial.site },
-    branding: { ...defaultSiteContent.branding, ...partial.branding },
-    heroSlides: partial.heroSlides ?? defaultSiteContent.heroSlides,
-    services: partial.services ?? defaultSiteContent.services,
-    testimonials: partial.testimonials ?? defaultSiteContent.testimonials,
-    kpis: partial.kpis ?? defaultSiteContent.kpis,
-  });
-}
-
 async function readLocal(): Promise<SiteContent | null> {
   try {
     const raw = await readFile(LOCAL_PATH, "utf8");
-    return merge(JSON.parse(raw) as Partial<SiteContent>);
+    return mergeContent(JSON.parse(raw) as Partial<SiteContent>);
   } catch {
     return null;
   }
@@ -36,12 +24,19 @@ async function writeLocal(content: SiteContent): Promise<void> {
 async function readBlob(): Promise<SiteContent | null> {
   if (!process.env.BLOB_READ_WRITE_TOKEN) return null;
   try {
-    const { blobs } = await list({ prefix: BLOB_PATH, limit: 1 });
+    const meta = await head(BLOB_PATH).catch(() => null);
+    if (meta?.url) {
+      const res = await fetch(meta.url, { cache: "no-store" });
+      if (res.ok) {
+        return mergeContent((await res.json()) as Partial<SiteContent>);
+      }
+    }
+    const { blobs } = await list({ prefix: "site-content", limit: 20 });
     const hit = blobs.find((b) => b.pathname === BLOB_PATH);
     if (!hit?.url) return null;
     const res = await fetch(hit.url, { cache: "no-store" });
     if (!res.ok) return null;
-    return merge((await res.json()) as Partial<SiteContent>);
+    return mergeContent((await res.json()) as Partial<SiteContent>);
   } catch {
     return null;
   }
@@ -60,17 +55,32 @@ export async function getSiteContent(): Promise<SiteContent> {
   if (fromBlob) return fromBlob;
   const fromLocal = await readLocal();
   if (fromLocal) return fromLocal;
-  return defaultSiteContent;
+  return mergeContent({});
 }
 
 export async function saveSiteContent(content: SiteContent): Promise<SiteContent> {
-  const parsed = siteContentSchema.parse(content);
+  const normalized = normalizeSiteContent(content);
+  const parsed = siteContentSchema.parse(normalized);
+
   if (process.env.BLOB_READ_WRITE_TOKEN) {
-    await writeBlob(parsed);
+    try {
+      await writeBlob(parsed);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Blob write failed";
+      throw new Error(`Could not save to Vercel Blob: ${message}`);
+    }
     await writeLocal(parsed).catch(() => undefined);
     return parsed;
   }
-  await writeLocal(parsed);
+
+  try {
+    await writeLocal(parsed);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "File write failed";
+    throw new Error(
+      `Could not save locally. On Vercel, add Storage → Blob so content persists. (${message})`,
+    );
+  }
   return parsed;
 }
 

@@ -1,36 +1,26 @@
 "use client";
 
-import { useMemo, useRef } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useRef } from "react";
+import { ChevronLeft, ChevronRight, Building2, Factory, Home } from "lucide-react";
 import { ServiceCard } from "@/components/ServiceCard";
-import { Building2, Factory, Home } from "lucide-react";
+import type { ServiceCard as ServiceCardType } from "@/lib/content/schema";
+import type { ImageTheme } from "@/lib/themed-images";
 
-export function ServicesSlider() {
+const themeIcons = {
+  residential: Home,
+  business: Building2,
+  industrial: Factory,
+} as const;
+
+function iconForTheme(theme: ImageTheme) {
+  if (theme === "residential") return Home;
+  if (theme === "business") return Building2;
+  if (theme === "industrial") return Factory;
+  return Building2;
+}
+
+export function ServicesSlider({ services }: { services: ServiceCardType[] }) {
   const ref = useRef<HTMLDivElement>(null);
-
-  const cards = useMemo(
-    () => [
-      {
-        title: "Home Security",
-        description: "Residential protection with smart integration and panic pathways.",
-        icon: Home,
-        items: ["Alarm systems & monitoring", "CCTV & perimeter protection", "Smart integration", "Panic response"],
-      },
-      {
-        title: "Business Security",
-        description: "Commercial coverage with access control and transparent reporting.",
-        icon: Building2,
-        items: ["Guarding & patrols", "Access control", "CCTV monitoring", "Risk assessments & asset protection"],
-      },
-      {
-        title: "Industrial Security",
-        description: "High-risk environments, logistics, and loss prevention.",
-        icon: Factory,
-        items: ["Site guarding", "Logistics escort", "High-risk protection", "Loss prevention"],
-      },
-    ],
-    []
-  );
 
   function scrollByCards(dir: -1 | 1) {
     const el = ref.current;
@@ -60,25 +50,23 @@ export function ServicesSlider() {
           <ChevronRight className="h-5 w-5" aria-hidden />
         </button>
       </div>
-
       <div
         ref={ref}
-        className="flex gap-6 overflow-x-auto scroll-smooth pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        style={{ scrollSnapType: "x mandatory" }}
+        className="flex snap-x snap-mandatory gap-6 overflow-x-auto pb-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        {cards.map((c) => (
-          <div
-            key={c.title}
-            data-slide
-            className="w-[85%] shrink-0 sm:w-[70%] lg:w-[calc((100%-48px)/3)]"
-            style={{ scrollSnapAlign: "start" }}
-          >
-            <ServiceCard title={c.title} description={c.description} icon={c.icon} items={c.items} />
+        {services.map((card) => (
+          <div key={card.title} data-slide className="w-[min(100%,340px)] shrink-0 snap-start sm:w-[360px]">
+            <ServiceCard
+              title={card.title}
+              description={card.description}
+              items={card.items}
+              icon={iconForTheme(card.theme)}
+              theme={card.theme}
+              imageUrl={card.imageUrl || undefined}
+            />
           </div>
         ))}
       </div>
-      <p className="mt-4 text-sm text-slate-600 lg:hidden">Swipe to browse services.</p>
     </div>
   );
 }
-

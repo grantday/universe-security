@@ -5,6 +5,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { Shell } from "@/components/Shell";
 import { JsonLd } from "@/components/JsonLd";
+import { getContent } from "@/lib/content/get";
 import { siteConfig } from "@/lib/site-config";
 
 const inter = Inter({
@@ -25,34 +26,42 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.url),
-  title: {
-    default: `${siteConfig.name} — ${siteConfig.tagline}`,
-    template: `%s | ${siteConfig.name}`,
-  },
-  description: siteConfig.description,
-  openGraph: {
-    type: "website",
-    locale: "en_ZW",
-    siteName: siteConfig.name,
-    title: siteConfig.name,
-    description: siteConfig.description,
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: siteConfig.name,
-    description: siteConfig.description,
-  },
-  robots: { index: true, follow: true },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const content = await getContent();
+  const { site } = content;
+  return {
+    metadataBase: new URL(siteConfig.url),
+    title: {
+      default: `${site.name} — ${site.tagline}`,
+      template: `%s | ${site.name}`,
+    },
+    description: site.description,
+    openGraph: {
+      type: "website",
+      locale: "en_ZW",
+      siteName: site.name,
+      title: site.name,
+      description: site.description,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: site.name,
+      description: site.description,
+    },
+    robots: { index: true, follow: true },
+  };
+}
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const content = await getContent();
+
   return (
     <html lang="en" className={`${inter.variable} ${plusJakarta.variable}`}>
       <body className="font-sans">
-        <JsonLd />
-        <Shell>{children}</Shell>
+        <JsonLd site={content.site} />
+        <Shell site={content.site} branding={content.branding}>
+          {children}
+        </Shell>
         <Analytics />
         <SpeedInsights />
       </body>

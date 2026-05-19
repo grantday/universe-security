@@ -1,14 +1,15 @@
 import { siteConfig } from "@/lib/site-config";
+import type { SiteInfo } from "@/lib/content/site-types";
 
-export function JsonLd() {
+export function JsonLd({ site }: { site: SiteInfo }) {
   const localBusiness = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    name: siteConfig.name,
-    description: siteConfig.description,
+    name: site.name,
+    description: site.description,
     url: siteConfig.url,
-    telephone: siteConfig.salesPhone,
-    email: siteConfig.email,
+    telephone: site.salesPhone,
+    email: site.email,
     address: {
       "@type": "PostalAddress",
       streetAddress: siteConfig.address.street,
@@ -22,8 +23,8 @@ export function JsonLd() {
   const securityService = {
     "@context": "https://schema.org",
     "@type": "SecurityService",
-    name: `${siteConfig.name} — Security services`,
-    provider: { "@type": "Organization", name: siteConfig.name, url: siteConfig.url },
+    name: `${site.name} — Security services`,
+    provider: { "@type": "Organization", name: site.name, url: siteConfig.url },
     areaServed: "Zimbabwe",
     serviceType: [
       "Residential security",
@@ -35,14 +36,8 @@ export function JsonLd() {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusiness) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(securityService) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusiness) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(securityService) }} />
     </>
   );
 }

@@ -3,19 +3,34 @@
 import { useEffect, useState } from "react";
 import type { SiteContent } from "@/lib/content/schema";
 import { useRouter } from "next/navigation";
+import { formatValidationErrors } from "@/lib/content/normalize";
+import { AdminPanelBody } from "@/components/admin/AdminPanelBody";
+
+const TABS = ["Branding & site", "Hero slides", "Services", "KPIs & testimonials", "Home sections", "Pages"] as const;
+type Tab = (typeof TABS)[number];
 
 export function AdminPanel() {
   const router = useRouter();
   const [content, setContent] = useState<SiteContent | null>(null);
+  const [tab, setTab] = useState<Tab>("Branding & site");
   const [status, setStatus] = useState("");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    fetch("/api/admin/content")
-      .then((r) => r.json())
-      .then(setContent)
+    fetch("/api/admin/content", { credentials: "include" })
+      .then((r) => {
+        if (r.status === 401) {
+          router.push("/admin/login");
+          return null;
+        }
+        if (!r.ok) throw new Error("Load failed");
+        return r.json() as Promise<SiteContent>;
+      })
+      .then((data) => {
+        if (data) setContent(data);
+      })
       .catch(() => setStatus("Failed to load content"));
-  }, []);
+  }, [router]);
 
   async function save() {
     if (!content) return;
@@ -23,13 +38,16 @@ export function AdminPanel() {
     setStatus("");
     const res = await fetch("/api/admin/content", {
       method: "PUT",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(content),
     });
     setSaving(false);
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
-      setStatus(data.error ?? "Save failed");
+      const msg = (data as { error?: string }).error ?? "Save failed";
+      const details = (data as { details?: unknown }).details;
+      setStatus(details ? `${msg} — ${formatValidationErrors(details)}` : msg);
       return;
     }
     setStatus("Saved — changes go live on the site within a minute.");
@@ -40,7 +58,7 @@ export function AdminPanel() {
     const form = new FormData();
     form.set("file", file);
     form.set("folder", "branding");
-    const res = await fetch("/api/admin/upload", { method: "POST", body: form });
+    const res = await fetch("/api/admin/upload", { method: "POST", body: form, credentials: "include" });
     const data = await res.json();
     if (!res.ok) {
       setStatus(data.error ?? "Upload failed");
@@ -51,7 +69,7 @@ export function AdminPanel() {
   }
 
   async function logout() {
-    await fetch("/api/admin/logout", { method: "POST" });
+    await fetch("/api/admin/logout", { method: "POST", credentials: "include" });
     router.push("/admin/login");
   }
 
@@ -75,80 +93,23 @@ export function AdminPanel() {
         </div>
       </header>
 
-      <main className="container-page max-w-3xl space-y-8 py-10">
-        <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-card">
-          <h2 className="font-display text-lg font-bold text-brand-900">Branding</h2>
-          <p className="mt-1 text-sm text-slate-600">Logo appears in the header when uploaded.</p>
-          {content.branding.logoUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={content.branding.logoUrl} alt="Logo preview" className="mt-4 h-12 w-auto object-contain" />
-          ) : null}
-          <input
-            type="file"
-            accept="image/*"
-            className="mt-4 block text-sm"
-            onChange={(e) => {
-              const f = e.target.files?.[0];
-              if (f) void uploadLogo(f);
-            }}
-          />
-        </section>
+      <main className="container-page max-w-4xl space-y-6 py-10">
+        <nav className="flex flex-wrap gap-2">
+          {TABS.map((t) => (
+            <button
+              key={t}
+              type="button"
+              onClick={() => setTab(t)}
+              className={`rounded-full px-3 py-1.5 text-sm font-semibold ${
+                tab === t ? "bg-brand-900 text-white" : "bg-white text-slate-600 ring-1 ring-slate-200"
+              }`}
+            >
+              {t}
+            </button>
+          ))}
+        </nav>
 
-        <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-card">
-          <h2 className="font-display text-lg font-bold text-brand-900">Site details</h2>
-          <div className="mt-4 grid gap-4">
-            <Field label="Company name" value={content.site.name} onChange={(v) => setContent({ ...content, site: { ...content.site, name: v } })} />
-            <Field label="Tagline" value={content.site.tagline} onChange={(v) => setContent({ ...content, site: { ...content.site, tagline: v } })} />
-            <Field label="Email" value={content.site.email} onChange={(v) => setContent({ ...content, site: { ...content.site, email: v } })} />
-            <Field
-              label="Sales phone (display)"
-              value={content.site.salesPhoneDisplay}
-              onChange={(v) => setContent({ ...content, site: { ...content.site, salesPhoneDisplay: v } })}
-            />
-            <Field
-              label="Emergency phone (display)"
-              value={content.site.emergencyPhoneDisplay}
-              onChange={(v) => setContent({ ...content, site: { ...content.site, emergencyPhoneDisplay: v } })}
-            />
-          </div>
-        </section>
-
-        <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-card">
-          <h2 className="font-display text-lg font-bold text-brand-900">Hero (slide 1)</h2>
-          <div className="mt-4 grid gap-4">
-            <Field
-              label="Eyebrow"
-              value={content.heroSlides[0]?.eyebrow ?? ""}
-              onChange={(v) => {
-                const slides = [...content.heroSlides];
-                slides[0] = { ...slides[0]!, eyebrow: v };
-                setContent({ ...content, heroSlides: slides });
-              }}
-            />
-            <Field
-              label="Title"
-              value={content.heroSlides[0]?.title ?? ""}
-              onChange={(v) => {
-                const slides = [...content.heroSlides];
-                slides[0] = { ...slides[0]!, title: v };
-                setContent({ ...content, heroSlides: slides });
-              }}
-            />
-            <label className="block text-sm font-semibold text-slate-700">
-              Body
-              <textarea
-                className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2"
-                rows={3}
-                value={content.heroSlides[0]?.body ?? ""}
-                onChange={(e) => {
-                  const slides = [...content.heroSlides];
-                  slides[0] = { ...slides[0]!, body: e.target.value };
-                  setContent({ ...content, heroSlides: slides });
-                }}
-              />
-            </label>
-          </div>
-        </section>
+        <AdminPanelBody tab={tab} content={content} setContent={setContent} onUploadLogo={uploadLogo} />
 
         {status ? <p className="text-sm font-medium text-brand-700">{status}</p> : null}
 
@@ -166,26 +127,5 @@ export function AdminPanel() {
         </p>
       </main>
     </div>
-  );
-}
-
-function Field({
-  label,
-  value,
-  onChange,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-}) {
-  return (
-    <label className="block text-sm font-semibold text-slate-700">
-      {label}
-      <input
-        className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 font-normal"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-      />
-    </label>
   );
 }

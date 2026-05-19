@@ -5,10 +5,11 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import { navLinks, siteConfig } from "@/lib/site-config";
+import { navLinks } from "@/lib/site-config";
 import { Button } from "@/components/Button";
 import { useReducedMotion } from "@/components/motion/useReducedMotion";
 import { cn } from "@/lib/cn";
+import type { BrandingInfo, SiteInfo } from "@/lib/content/site-types";
 
 function LogoMark({ className }: { className?: string }) {
   return (
@@ -24,7 +25,7 @@ function LogoMark({ className }: { className?: string }) {
   );
 }
 
-export function SiteHeader() {
+export function SiteHeader({ site, branding }: { site: SiteInfo; branding: BrandingInfo }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -60,9 +61,14 @@ export function SiteHeader() {
     <div className={cn("fixed inset-x-0 top-0 z-50 transition-all duration-300", shellClass)}>
       <motion.div className="container-page flex h-[68px] items-center justify-between gap-4">
         <Link href="/" className="flex items-center gap-3 font-display text-base font-bold tracking-tight text-navy">
-          <LogoMark className="h-9 w-9 shrink-0" />
+          {branding.logoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={branding.logoUrl} alt="" className="h-9 w-auto max-w-[140px] shrink-0 object-contain" />
+          ) : (
+            <LogoMark className="h-9 w-9 shrink-0" />
+          )}
           <span className="leading-tight">
-            <span className="block">{siteConfig.name}</span>
+            <span className="block">{site.name}</span>
             <span className="hidden text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-muted lg:block">
               Corporate security
             </span>
@@ -98,7 +104,7 @@ export function SiteHeader() {
             Request assessment
           </Button>
           <a
-            href={`tel:${siteConfig.emergencyPhone}`}
+            href={`tel:${site.emergencyPhone}`}
             className="inline-flex items-center gap-2 rounded-xl bg-emergency px-4 py-2.5 text-sm font-semibold text-white shadow-soft hover:bg-red-700"
           >
             <span className="relative flex h-2 w-2">
@@ -168,7 +174,7 @@ export function SiteHeader() {
                   Request assessment
                 </Link>
                 <a
-                  href={`tel:${siteConfig.emergencyPhone}`}
+                  href={`tel:${site.emergencyPhone}`}
                   className="flex items-center justify-center gap-2 rounded-xl bg-emergency px-4 py-3 text-sm font-semibold text-white"
                 >
                   Emergency 24/7

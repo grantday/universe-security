@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { Activity, MapPin, ShieldAlert, ScrollText } from "lucide-react";
 import { IncidentFlow } from "@/components/IncidentFlow";
 import { MockDashboard } from "@/components/MockDashboard";
 import { Button } from "@/components/Button";
 import { PlaceholderImage } from "@/components/PlaceholderImage";
+import { getIcon } from "@/lib/content/icons";
+import { getContent } from "@/lib/content/get";
 
 export const metadata: Metadata = {
   title: "Control Centre",
@@ -11,38 +12,16 @@ export const metadata: Metadata = {
     "Centralised 24/7 operations — incident flow from alarm to resolution, live monitoring, GPS tracking, escalation, and audit trails.",
 };
 
-const features = [
-  {
-    title: "Live monitoring",
-    body: "Unified alarm and CCTV signals with operator workflows and priority queues.",
-    icon: Activity,
-  },
-  {
-    title: "GPS tracking",
-    body: "Patrol and response units visible on-map for dispatch accuracy and SLA reporting.",
-    icon: MapPin,
-  },
-  {
-    title: "Escalation system",
-    body: "Tiered alerts to supervisors, clients, and emergency services when thresholds are met.",
-    icon: ShieldAlert,
-  },
-  {
-    title: "Audit trail",
-    body: "Immutable logs from signal receipt through dispatch, on-site actions, and closure.",
-    icon: ScrollText,
-  },
-] as const;
+export default async function ControlCentrePage() {
+  const { pages } = await getContent();
+  const page = pages.controlCentre;
 
-export default function ControlCentrePage() {
   return (
     <div className="bg-white">
       <div className="border-b border-slate-100 bg-gradient-to-r from-brand-900 to-brand-700 py-14 text-white sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h1 className="font-display text-4xl font-bold tracking-tight sm:text-5xl">Control Centre</h1>
-          <p className="mt-4 max-w-2xl text-lg text-white/90">
-            Incident flow: Alarm → Control Room → Dispatch → Response → Resolution. One hub, full traceability.
-          </p>
+          <h1 className="font-display text-4xl font-bold tracking-tight sm:text-5xl">{page.heroTitle}</h1>
+          <p className="mt-4 max-w-2xl text-lg text-white/90">{page.heroIntro}</p>
         </div>
       </div>
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
@@ -60,8 +39,8 @@ export default function ControlCentrePage() {
         </div>
         <div className="mt-16 grid gap-10 lg:grid-cols-2 lg:items-center">
           <div className="space-y-6">
-            {features.map((f) => {
-              const Icon = f.icon;
+            {page.features.map((f) => {
+              const Icon = getIcon(f.icon);
               return (
                 <div key={f.title} className="flex gap-4">
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-700">
@@ -78,7 +57,7 @@ export default function ControlCentrePage() {
           <MockDashboard />
         </div>
         <div className="mt-16 text-center">
-          <Button href="/contact">Book a control-centre walkthrough</Button>
+          <Button href={page.ctaHref}>{page.ctaLabel}</Button>
         </div>
       </div>
     </div>

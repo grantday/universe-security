@@ -8,6 +8,7 @@ import { TestimonialsSection } from "@/components/home/TestimonialsSection";
 import { ContactCta } from "@/components/home/ContactCta";
 import type { Metadata } from "next";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
+import { getContent } from "@/lib/content/get";
 
 export const metadata: Metadata = {
   title: "Intelligent security for Zimbabwe",
@@ -15,30 +16,32 @@ export const metadata: Metadata = {
     "Universe Security — integrated residential, commercial, and industrial protection with 24/7 control centre monitoring and rapid response.",
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const content = await getContent();
+
   return (
     <>
-      <HomeHeroSlider />
+      <HomeHeroSlider slides={content.heroSlides} />
       <ScrollReveal>
-        <TrustStrip />
+        <TrustStrip badges={content.home.trustBadges} />
       </ScrollReveal>
       <ScrollReveal>
-        <CoreServices />
+        <CoreServices header={content.home.coreServices} services={content.services} />
       </ScrollReveal>
       <ScrollReveal>
-        <ControlCentrePreview />
+        <ControlCentrePreview section={content.home.controlCentrePreview} />
       </ScrollReveal>
       <ScrollReveal>
-        <WhyChoose />
+        <WhyChoose section={content.home.whyChoose} />
       </ScrollReveal>
       <ScrollReveal>
-        <KpiSection />
+        <KpiSection header={content.home.kpisSection} kpis={content.kpis} />
       </ScrollReveal>
       <ScrollReveal>
-        <TestimonialsSection />
+        <TestimonialsSection section={content.home.testimonialsSection} testimonials={content.testimonials} />
       </ScrollReveal>
       <ScrollReveal>
-        <ContactCta />
+        <ContactCta section={content.home.contactCta} site={content.site} />
       </ScrollReveal>
     </>
   );
