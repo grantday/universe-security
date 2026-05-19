@@ -2,6 +2,9 @@
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ["sanity", "next-sanity"],
+  compiler: {
+    styledComponents: true,
+  },
   images: {
     remotePatterns: [
       {

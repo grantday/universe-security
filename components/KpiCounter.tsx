@@ -12,17 +12,26 @@ type Props = {
 };
 
 export function KpiCounter({ label, value, suffix = "", prefix = "", decimals = 0, className = "" }: Props) {
-  const [display, setDisplay] = useState(0);
+  const [display, setDisplay] = useState(value);
   const ref = useRef<HTMLDivElement>(null);
   const done = useRef(false);
 
   useEffect(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) {
+      setDisplay(value);
+      done.current = true;
+      return;
+    }
+
     const el = ref.current;
     if (!el) return;
+
     const obs = new IntersectionObserver(
       (entries) => {
         if (!entries[0]?.isIntersecting || done.current) return;
         done.current = true;
+        setDisplay(0);
         const duration = 1200;
         const start = performance.now();
         const tick = (now: number) => {
@@ -33,10 +42,22 @@ export function KpiCounter({ label, value, suffix = "", prefix = "", decimals = 
         };
         requestAnimationFrame(tick);
       },
-      { threshold: 0.35 }
+      { threshold: 0.15, rootMargin: "0px 0px -10% 0px" }
     );
+
     obs.observe(el);
-    return () => obs.disconnect();
+
+    const fallback = window.setTimeout(() => {
+      if (!done.current) {
+        done.current = true;
+        setDisplay(value);
+      }
+    }, 2500);
+
+    return () => {
+      window.clearTimeout(fallback);
+      obs.disconnect();
+    };
   }, [value]);
 
   const formatted =
