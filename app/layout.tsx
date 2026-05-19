@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { Shell } from "@/components/Shell";
 import { JsonLd } from "@/components/JsonLd";
@@ -51,6 +53,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="font-sans">
         <JsonLd />
         <Shell>{children}</Shell>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
