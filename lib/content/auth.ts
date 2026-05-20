@@ -31,16 +31,19 @@ export async function signAdminSessionToken(): Promise<string> {
 
 export async function createAdminSession() {
   const token = await signAdminSessionToken();
-  cookies().set(COOKIE, token, adminSessionCookieOptions());
+  const cookieStore = await cookies();
+  cookieStore.set(COOKIE, token, adminSessionCookieOptions());
   return token;
 }
 
 export async function clearAdminSession() {
-  cookies().set(COOKIE, "", { httpOnly: true, path: "/", maxAge: 0 });
+  const cookieStore = await cookies();
+  cookieStore.set(COOKIE, "", { httpOnly: true, path: "/", maxAge: 0 });
 }
 
 export async function isAdminAuthenticated(): Promise<boolean> {
-  const token = cookies().get(COOKIE)?.value;
+  const cookieStore = await cookies();
+  const token = cookieStore.get(COOKIE)?.value;
   if (!token) return false;
   try {
     await jwtVerify(token, secret());

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { SiteContent } from "@/lib/content/schema";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { formatValidationErrors, prepareContentForSave } from "@/lib/content/normalize";
 import { AdminPanelBody } from "@/components/admin/AdminPanelBody";
@@ -97,9 +98,9 @@ export function AdminPanel() {
         <div className="container-page flex h-14 items-center justify-between">
           <p className="font-display font-bold text-brand-900">Content admin</p>
           <div className="flex gap-3">
-            <a href="/" className="text-sm font-semibold text-slate-600 hover:text-brand-900">
+            <Link href="/" className="text-sm font-semibold text-slate-600 hover:text-brand-900">
               View site
-            </a>
+            </Link>
             <button type="button" onClick={logout} className="text-sm font-semibold text-slate-600">
               Sign out
             </button>

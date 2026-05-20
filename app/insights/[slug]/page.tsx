@@ -4,14 +4,15 @@ import type { Metadata } from "next";
 import { getInsightBySlug, getInsightSlugs } from "@/lib/insights";
 import { ProseMdx } from "@/components/mdx/Prose";
 
-type Props = { params: { slug: string } };
+type Props = { params: Promise<{ slug: string }> };
 
 export function generateStaticParams() {
   return getInsightSlugs().map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const post = getInsightBySlug(params.slug);
+  const { slug } = await params;
+  const post = getInsightBySlug(slug);
   if (!post) return {};
   return {
     title: post.frontmatter.title,
@@ -20,8 +21,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function InsightPostPage({ params }: Props) {
-  const post = getInsightBySlug(params.slug);
+export default async function InsightPostPage({ params }: Props) {
+  const { slug } = await params;
+  const post = getInsightBySlug(slug);
   if (!post) notFound();
   const { frontmatter, content } = post;
   return (
