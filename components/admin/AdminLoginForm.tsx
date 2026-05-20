@@ -26,7 +26,7 @@ export function AdminLoginForm() {
       setError(data.error ?? "Login failed");
       return;
     }
-    router.push(search.get("next") || "/admin");
+    router.push(search.get("next") || "/cms-admin");
     router.refresh();
   }
 

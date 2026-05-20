@@ -21,7 +21,7 @@ export function AdminPanel() {
     fetch("/api/admin/content", { credentials: "include" })
       .then((r) => {
         if (r.status === 401) {
-          router.push("/admin/login");
+          router.push("/cms-admin/login");
           return null;
         }
         if (!r.ok) throw new Error("Load failed");
@@ -85,7 +85,7 @@ export function AdminPanel() {
 
   async function logout() {
     await fetch("/api/admin/logout", { method: "POST", credentials: "include" });
-    router.push("/admin/login");
+    router.push("/cms-admin/login");
   }
 
   if (!content) {

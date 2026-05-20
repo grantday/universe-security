@@ -19,21 +19,21 @@ async function isAuthed(request: NextRequest) {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
+  if (pathname.startsWith("/cms-admin") && pathname !== "/cms-admin/login") {
     if (!(await isAuthed(request))) {
-      const login = new URL("/admin/login", request.url);
+      const login = new URL("/cms-admin/login", request.url);
       login.searchParams.set("next", pathname);
       return NextResponse.redirect(login);
     }
   }
 
-  if (pathname === "/admin/login" && (await isAuthed(request))) {
-    return NextResponse.redirect(new URL("/admin", request.url));
+  if (pathname === "/cms-admin/login" && (await isAuthed(request))) {
+    return NextResponse.redirect(new URL("/cms-admin", request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/admin", "/admin/login", "/admin/:path*"],
+  matcher: ["/cms-admin", "/cms-admin/login", "/cms-admin/:path*"],
 };

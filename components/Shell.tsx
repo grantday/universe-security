@@ -14,7 +14,7 @@ type Props = {
 
 export function Shell({ children, site, branding }: Props) {
   const pathname = usePathname();
-  const isBare = pathname?.startsWith("/admin") || pathname?.startsWith("/studio");
+  const isBare = pathname?.startsWith("/cms-admin") || pathname?.startsWith("/studio");
 
   if (isBare) {
     return <>{children}</>;
