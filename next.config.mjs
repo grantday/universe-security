@@ -1,4 +1,5 @@
 import { createRequire } from "module";
+import { withPayload } from "@payloadcms/next/withPayload";
 
 const require = createRequire(import.meta.url);
 
@@ -31,4 +32,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withPayload(nextConfig);

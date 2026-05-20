@@ -33,3 +33,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Payload CMS (local SQLite + media)
+universe-security.db
+universe-security.db-journal
+.env.local
+/public/media/
