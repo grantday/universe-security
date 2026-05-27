@@ -30,6 +30,7 @@ export const navLinks = [
   { href: "/insights", label: "Insights" },
   { href: "/company", label: "Company" },
   { href: "/contact", label: "Contact" },
+  { href: "/store", label: "Store" },
 ] as const;
 
 export const footerColumns = {
@@ -55,6 +56,12 @@ export const footerColumns = {
       { href: "/industries", label: "All industries" },
       { href: "/control-centre", label: "Control Centre" },
       { href: "/technology", label: "Technology" },
+    ],
+  },
+  shop: {
+    title: "Shop",
+    links: [
+      { href: "/store", label: "Online Store" },
     ],
   },
   legal: {
