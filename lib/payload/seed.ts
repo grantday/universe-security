@@ -71,6 +71,7 @@ export async function runPayloadSeed(): Promise<{ ok: true; message: string }> {
       emergencyPhone: defaults.site.emergencyPhone,
       emergencyPhoneDisplay: defaults.site.emergencyPhoneDisplay,
       addressFull: defaults.site.addressFull,
+      mapEmbedUrl: defaults.site.mapEmbedUrl,
       logoMarkText: defaults.branding.logoMarkText,
       seoDescription:
         "Universe Security — 24/7 guarding, CCTV, access control, and control-room monitoring across Harare and Zimbabwe.",
