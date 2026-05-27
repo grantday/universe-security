@@ -1,6 +1,7 @@
 import { del, head, put, list } from "@vercel/blob";
 import { readFile, writeFile } from "fs/promises";
 import path from "path";
+import { applyContactFromConfig } from "@/lib/content/contact-from-config";
 import { mergeContent } from "@/lib/content/merge";
 import { normalizeSiteContent } from "@/lib/content/normalize";
 import { siteContentSchema, type SiteContent } from "@/lib/content/schema";
@@ -54,12 +55,16 @@ async function writeBlob(content: SiteContent): Promise<void> {
   });
 }
 
+function withContactDefaults(content: SiteContent): SiteContent {
+  return normalizeSiteContent(applyContactFromConfig(content));
+}
+
 export async function getSiteContent(): Promise<SiteContent> {
   const fromBlob = await readBlob();
-  if (fromBlob) return fromBlob;
+  if (fromBlob) return withContactDefaults(fromBlob);
   const fromLocal = await readLocal();
-  if (fromLocal) return fromLocal;
-  return mergeContent({});
+  if (fromLocal) return withContactDefaults(fromLocal);
+  return withContactDefaults(mergeContent({}));
 }
 
 export async function saveSiteContent(content: SiteContent): Promise<SiteContent> {
