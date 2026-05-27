@@ -4,7 +4,7 @@ export const siteConfig = {
   description:
     "Integrated protection services for residential, commercial, and industrial environments across Zimbabwe.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://universe-security.example.com",
-  email: "hello@universesecurity.co.zw",
+  email: "info@universe-security.com",
   salesPhone: "0773236764",
   salesPhoneDisplay: "077 323 6764",
   emergencyPhone: "+263779110000",

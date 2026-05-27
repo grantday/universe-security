@@ -1,10 +1,15 @@
 import { NextResponse } from "next/server";
 import { runPayloadSeed } from "@/lib/payload/seed";
 
-/** Dev-only: POST to re-seed Payload from content/site-content.json */
-export async function POST() {
+/** POST to re-seed Payload. Requires ?secret=ADMIN_PASSWORD in production. */
+export async function POST(request: Request) {
   if (process.env.NODE_ENV === "production") {
-    return NextResponse.json({ error: "Not available in production" }, { status: 404 });
+    const { searchParams } = new URL(request.url);
+    const secret = searchParams.get("secret");
+    const adminPassword = process.env.ADMIN_PASSWORD || process.env.PAYLOAD_ADMIN_PASSWORD;
+    if (!secret || secret !== adminPassword) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
   }
 
   try {
