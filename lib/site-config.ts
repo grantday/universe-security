@@ -7,8 +7,8 @@ export const siteConfig = {
   email: "info@universe-security.com",
   salesPhone: "0773236764",
   salesPhoneDisplay: "077 323 6764",
-  emergencyPhone: "+263779110000",
-  emergencyPhoneDisplay: "+263 77 911 0000",
+  emergencyPhone: "0773236764",
+  emergencyPhoneDisplay: "077 323 6764",
   address: {
     street: "84 King George",
     city: "Harare",
