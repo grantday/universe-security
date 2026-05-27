@@ -19,7 +19,13 @@ export default async function IndustriesPage() {
         <p className="mt-4 max-w-2xl text-lg text-slate-600">{page.intro}</p>
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {page.items.map((ind) => (
-            <IndustryCard key={ind.title} title={ind.title} blurb={ind.blurb} iconKey={ind.icon} />
+            <IndustryCard
+              key={ind.title}
+              title={ind.title}
+              blurb={ind.blurb}
+              iconKey={ind.icon}
+              imageUrl={"imageUrl" in ind ? (ind.imageUrl as string | undefined) : undefined}
+            />
           ))}
         </div>
       </div>

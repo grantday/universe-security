@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Phone, MapPin, Clock } from "lucide-react";
 import { ContactForm } from "@/components/ContactForm";
+import { AssessmentWizard } from "@/components/contact/AssessmentWizard";
 import { siteConfig } from "@/lib/site-config";
 import { getContent } from "@/lib/content/get";
 
@@ -20,11 +21,24 @@ export default async function ContactPage() {
         <h1 className="font-display text-4xl font-bold tracking-tight text-brand-900">{page.title}</h1>
         <p className="mt-4 max-w-2xl text-lg text-slate-600">{page.intro}</p>
         <div className="mt-12 grid gap-10 lg:grid-cols-2">
-          <div className="rounded-2xl border border-slate-100 bg-white p-8 shadow-card">
-            <h2 className="font-display text-xl font-bold text-brand-900">{page.formHeading}</h2>
-            <p className="mt-2 text-sm text-slate-600">{page.formIntro}</p>
-            <div className="mt-8">
-              <ContactForm />
+          <div className="space-y-8">
+            <div className="rounded-2xl border border-brand-100 bg-brand-50/40 p-8 shadow-card">
+              <h2 className="font-display text-xl font-bold text-brand-900">Security assessment</h2>
+              <p className="mt-2 text-sm text-slate-600">
+                Answer a few questions so our team can scope coverage, response times, and the right mix of guarding,
+                CCTV, and control-room monitoring.
+              </p>
+              <p className="mt-3 text-xs text-slate-500">{site.officeHours}</p>
+              <div className="mt-8">
+                <AssessmentWizard officeHours={site.officeHours} />
+              </div>
+            </div>
+            <div className="rounded-2xl border border-slate-100 bg-white p-8 shadow-card">
+              <h2 className="font-display text-xl font-bold text-brand-900">{page.formHeading}</h2>
+              <p className="mt-2 text-sm text-slate-600">{page.formIntro}</p>
+              <div className="mt-8">
+                <ContactForm />
+              </div>
             </div>
           </div>
           <div className="space-y-6">

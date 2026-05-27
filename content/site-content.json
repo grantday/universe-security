@@ -23,7 +23,7 @@
       "body": "Integrated protection for residential, commercial, and industrial environments — with rapid response you can trust.",
       "theme": "controlRoom",
       "seed": "home-control-room",
-      "imageUrl": "",
+      "imageUrl": "/images/control-room.jpg",
       "ctaPrimary": {
         "href": "/contact",
         "label": "Request security assessment"
@@ -40,7 +40,7 @@
       "body": "Professional guarding and patrols aligned to your site's SOPs and reporting requirements.",
       "theme": "guards",
       "seed": "home-guards",
-      "imageUrl": "",
+      "imageUrl": "/images/guards.jpg",
       "ctaPrimary": {
         "href": "/solutions#business",
         "label": "Explore guarding"
@@ -57,7 +57,7 @@
       "body": "Unified signals, structured operator workflows, and an audit trail from alarm to resolution.",
       "theme": "cctv",
       "seed": "home-cctv",
-      "imageUrl": "",
+      "imageUrl": "/images/cctv.jpg",
       "ctaPrimary": {
         "href": "/technology",
         "label": "See the technology"
@@ -79,7 +79,7 @@
         "Smart integration",
         "Panic response"
       ],
-      "imageUrl": ""
+      "imageUrl": "/images/residential.jpg"
     },
     {
       "title": "Business Security",
@@ -91,7 +91,7 @@
         "CCTV monitoring",
         "Risk assessments & asset protection"
       ],
-      "imageUrl": ""
+      "imageUrl": "/images/business.jpg"
     },
     {
       "title": "Industrial Security",
@@ -103,7 +103,7 @@
         "High-risk protection",
         "Loss prevention"
       ],
-      "imageUrl": ""
+      "imageUrl": "/images/industrial.jpg"
     }
   ],
   "testimonials": [

@@ -1,3 +1,4 @@
+import { DEFAULT_LOGO_PATH } from "@/lib/brand";
 import { siteConfig } from "@/lib/site-config";
 import type { SiteContent } from "@/lib/content/schema";
 
@@ -15,7 +16,7 @@ export const defaultSiteContent: SiteContent = {
     officeHours: siteConfig.officeHours,
   },
   branding: {
-    logoUrl: "",
+    logoUrl: DEFAULT_LOGO_PATH,
     logoMarkText: "U",
   },
   heroSlides: [
@@ -26,7 +27,7 @@ export const defaultSiteContent: SiteContent = {
       body: "Integrated protection for residential, commercial, and industrial environments — with rapid response you can trust.",
       theme: "controlRoom",
       seed: "home-control-room",
-      imageUrl: "",
+      imageUrl: "/images/control-room.jpg",
       ctaPrimary: { href: "/contact", label: "Request security assessment" },
       ctaSecondary: { href: `tel:${siteConfig.emergencyPhone}`, label: "Emergency response" },
     },
@@ -37,7 +38,7 @@ export const defaultSiteContent: SiteContent = {
       body: "Professional guarding and patrols aligned to your site's SOPs and reporting requirements.",
       theme: "guards",
       seed: "home-guards",
-      imageUrl: "",
+      imageUrl: "/images/guards.jpg",
       ctaPrimary: { href: "/solutions#business", label: "Explore guarding" },
       ctaSecondary: { href: "/contact", label: "Talk to us" },
     },
@@ -48,7 +49,7 @@ export const defaultSiteContent: SiteContent = {
       body: "Unified signals, structured operator workflows, and an audit trail from alarm to resolution.",
       theme: "cctv",
       seed: "home-cctv",
-      imageUrl: "",
+      imageUrl: "/images/cctv.jpg",
       ctaPrimary: { href: "/technology", label: "See the technology" },
       ctaSecondary: { href: "/control-centre", label: "Control Centre" },
     },
@@ -59,21 +60,21 @@ export const defaultSiteContent: SiteContent = {
       description: "Residential protection with smart integration and panic pathways.",
       theme: "residential",
       items: ["Alarm systems & monitoring", "CCTV & perimeter protection", "Smart integration", "Panic response"],
-      imageUrl: "",
+      imageUrl: "/images/residential.jpg",
     },
     {
       title: "Business Security",
       description: "Commercial coverage with access control and transparent reporting.",
       theme: "business",
       items: ["Guarding & patrols", "Access control", "CCTV monitoring", "Risk assessments & asset protection"],
-      imageUrl: "",
+      imageUrl: "/images/business.jpg",
     },
     {
       title: "Industrial Security",
       description: "High-risk environments, logistics, and loss prevention.",
       theme: "industrial",
       items: ["Site guarding", "Logistics escort", "High-risk protection", "Loss prevention"],
-      imageUrl: "",
+      imageUrl: "/images/industrial.jpg",
     },
   ],
   testimonials: [

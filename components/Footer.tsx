@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { UniverseLogo } from "@/components/brand/UniverseLogo";
 import { footerColumns } from "@/lib/site-config";
 import { Phone } from "lucide-react";
 import type { BrandingInfo, SiteInfo } from "@/lib/content/site-types";
@@ -10,21 +11,17 @@ export function Footer({ site, branding }: { site: SiteInfo; branding: BrandingI
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2">
-              {branding.logoUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={branding.logoUrl} alt="" className="h-9 w-auto max-w-[120px] object-contain" />
-              ) : (
-                <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-sm font-black text-white ring-1 ring-white/10">
-                  {branding.logoMarkText}
-                </span>
-              )}
-              <p className="font-display text-xl font-bold text-white">{site.name}</p>
+              <UniverseLogo logoUrl={branding.logoUrl} alt={site.name} onDark className="max-w-[160px]" />
+              <p className="sr-only font-display text-xl font-bold text-white">{site.name}</p>
             </div>
             <p className="mt-3 max-w-md text-sm text-white/75">{site.description}</p>
             <div className="mt-6 flex flex-col gap-2 text-sm text-white/80">
               <a href={`tel:${site.salesPhone}`} className="inline-flex items-center gap-2 hover:text-white">
                 <Phone className="h-4 w-4 shrink-0" aria-hidden />
                 {site.salesPhoneDisplay}
+              </a>
+              <a href={`mailto:${site.email}`} className="hover:text-white hover:underline">
+                {site.email}
               </a>
               <p>{site.addressFull}</p>
             </div>

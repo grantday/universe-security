@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { IncidentFlow } from "@/components/IncidentFlow";
-import { MockDashboard } from "@/components/MockDashboard";
+import { ControlCentreSimulator } from "@/components/control-centre/ControlCentreSimulator";
 import { Button } from "@/components/Button";
 import { PlaceholderImage } from "@/components/PlaceholderImage";
 import { getIcon } from "@/lib/content/icons";
 import { getContent } from "@/lib/content/get";
+import { getControlCentreSteps, getPublishedMetrics } from "@/lib/payload/queries";
 
 export const metadata: Metadata = {
   title: "Control Centre",
@@ -13,7 +14,11 @@ export const metadata: Metadata = {
 };
 
 export default async function ControlCentrePage() {
-  const { pages } = await getContent();
+  const [{ pages }, steps, kpis] = await Promise.all([
+    getContent(),
+    getControlCentreSteps(),
+    getPublishedMetrics(),
+  ]);
   const page = pages.controlCentre;
 
   return (
@@ -25,7 +30,7 @@ export default async function ControlCentrePage() {
         </div>
       </div>
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
-        <IncidentFlow />
+        <IncidentFlow steps={steps} />
         <div className="mt-10 grid gap-6 lg:grid-cols-3">
           <div className="aspect-[16/10]">
             <PlaceholderImage seed="alarm" label="Alarm signal" theme="cctv" className="h-full w-full" />
@@ -54,7 +59,7 @@ export default async function ControlCentrePage() {
               );
             })}
           </div>
-          <MockDashboard />
+          <ControlCentreSimulator steps={steps} kpis={kpis} />
         </div>
         <div className="mt-16 text-center">
           <Button href={page.ctaHref}>{page.ctaLabel}</Button>

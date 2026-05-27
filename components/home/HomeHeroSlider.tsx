@@ -3,9 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Shield } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { LayeredHeroCards } from "@/components/home/LayeredHeroCards";
+import { HeroShieldMotif } from "@/components/home/HeroShieldMotif";
 import { Button } from "@/components/Button";
-import { PlaceholderImage } from "@/components/PlaceholderImage";
+import { AUTOPLAY_MS } from "@/lib/hero/layered-slider";
 import type { HeroSlide } from "@/lib/content/schema";
 
 export function HomeHeroSlider({ slides }: { slides: HeroSlide[] }) {
@@ -33,10 +35,9 @@ export function HomeHeroSlider({ slides }: { slides: HeroSlide[] }) {
 
   useEffect(() => {
     if (reduceMotion) return;
-    setTick(0);
     const id = window.setInterval(() => {
       if (!pausedRef.current) next();
-    }, 7500);
+    }, AUTOPLAY_MS);
     return () => window.clearInterval(id);
   }, [index, reduceMotion]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -48,41 +49,30 @@ export function HomeHeroSlider({ slides }: { slides: HeroSlide[] }) {
     return () => window.clearInterval(id);
   }, [reduceMotion]);
 
-  const accent =
-    active.id === "control"
-      ? "from-brand-100/70"
-      : active.id === "guards"
-        ? "from-slate-100/70"
-        : "from-brand-50/70";
-
-  const variants = reduceMotion
-    ? {
-        initial: { opacity: 0 },
-        animate: { opacity: 1 },
-        exit: { opacity: 0 },
-      }
+  const textVariants = reduceMotion
+    ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } }
     : {
-        initial: (d: 1 | -1) => ({ opacity: 0, x: d * 24 }),
+        initial: (d: 1 | -1) => ({ opacity: 0, x: d * 20 }),
         animate: { opacity: 1, x: 0 },
-        exit: (d: 1 | -1) => ({ opacity: 0, x: d * -24 }),
+        exit: (d: 1 | -1) => ({ opacity: 0, x: d * -16 }),
       };
 
   return (
-    <section className="relative overflow-hidden bg-white">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(30,91,168,0.14),_transparent_55%)]" />
-      <div className="pointer-events-none absolute -left-24 top-20 h-72 w-72 rounded-full bg-brand-100 blur-3xl" />
-      <div className="pointer-events-none absolute -right-24 top-10 h-72 w-72 rounded-full bg-slate-100 blur-3xl" />
-      <div className={`pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b ${accent} to-transparent`} />
+    <section className="relative overflow-hidden bg-gradient-to-br from-navy-dark via-brand-900 to-navy-deep text-white">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_20%_20%,_rgba(30,91,168,0.35),_transparent_50%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_80%_60%,_rgba(245,158,11,0.08),_transparent_45%)]" />
+      <HeroShieldMotif className="pointer-events-none absolute -right-8 top-8 h-64 w-52 text-white opacity-30 sm:h-80 sm:w-64" />
+      <HeroShieldMotif className="pointer-events-none absolute -left-16 bottom-0 h-48 w-40 text-white opacity-20" />
 
       <div
-        className="container-page relative pb-16 pt-12 sm:pb-20 sm:pt-16 lg:pb-24 lg:pt-20"
+        className="container-page relative pb-14 pt-24 sm:pb-20 sm:pt-28 lg:pb-24 lg:pt-32"
         onMouseEnter={() => (pausedRef.current = true)}
         onMouseLeave={() => (pausedRef.current = false)}
       >
-        <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
-          <div className="lg:col-span-7">
-            <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-700 shadow-hairline">
-              <Shield className="h-3.5 w-3.5 text-brand-700" aria-hidden />
+        <div className="grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-10">
+          <div className="lg:col-span-6 xl:col-span-5">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white/90 backdrop-blur-sm">
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-brand" aria-hidden />
               {active.eyebrow}
             </div>
 
@@ -90,44 +80,44 @@ export function HomeHeroSlider({ slides }: { slides: HeroSlide[] }) {
               <motion.div
                 key={active.id}
                 custom={dir}
-                variants={variants}
-                initial="initial"
+                variants={textVariants}
+                initial={false}
                 animate="animate"
                 exit="exit"
-                transition={{ duration: reduceMotion ? 0.2 : 0.55, ease: "easeOut" }}
+                transition={{ duration: reduceMotion ? 0.2 : 0.5, ease: "easeOut" }}
               >
-                <h1 className="mt-6 font-display text-4xl font-extrabold leading-tight tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
+                <h1 className="mt-6 font-display text-4xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-[3.25rem]">
                   {active.title}
                 </h1>
-                <p className="mt-6 max-w-2xl text-lg text-slate-700 sm:text-xl">{active.body}</p>
+                <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/85 sm:text-xl">{active.body}</p>
                 <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
-                  <Button href={active.ctaPrimary.href} variant="primary">
+                  <Button href={active.ctaPrimary.href} variant="primary" className="!bg-white !text-brand-900 hover:!bg-white/90">
                     {active.ctaPrimary.label}
                   </Button>
                   {active.ctaSecondary.href.startsWith("tel:") ? (
                     <Link
                       href={active.ctaSecondary.href}
-                      className="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 shadow-hairline hover:bg-slate-50"
+                      className="inline-flex items-center justify-center rounded-xl border border-white/30 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/10"
                     >
                       {active.ctaSecondary.label}
                     </Link>
                   ) : (
-                    <Button href={active.ctaSecondary.href} variant="secondary">
+                    <Link
+                      href={active.ctaSecondary.href}
+                      className="inline-flex items-center justify-center rounded-xl border border-white/30 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/10"
+                    >
                       {active.ctaSecondary.label}
-                    </Button>
+                    </Link>
                   )}
                 </div>
               </motion.div>
             </AnimatePresence>
 
-            <div className="mt-10 flex items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <p className="text-xs font-semibold text-slate-500">
-                  {index + 1} / {slides.length}
-                  <span className="text-slate-300"> · </span>
-                  <span className="font-medium text-slate-500">Auto</span>
-                </p>
-                <div className="flex gap-2" role="tablist" aria-label="Hero slides">
+            <div className="mt-10 flex flex-wrap items-center gap-4">
+              <p className="text-xs font-semibold text-white/50">
+                {index + 1} / {slides.length}
+              </p>
+              <div className="flex gap-2" role="tablist" aria-label="Hero slides">
                 {slides.map((s, i) => (
                   <button
                     key={s.id}
@@ -136,18 +126,17 @@ export function HomeHeroSlider({ slides }: { slides: HeroSlide[] }) {
                     aria-selected={i === index}
                     aria-label={`Show slide ${i + 1}`}
                     onClick={() => go(i)}
-                    className={`h-2.5 w-10 rounded-full transition-colors ${
-                      i === index ? "bg-brand-700" : "bg-slate-200 hover:bg-slate-300"
+                    className={`h-2 rounded-full transition-all ${
+                      i === index ? "w-10 bg-white" : "w-6 bg-white/25 hover:bg-white/40"
                     }`}
                   />
                 ))}
               </div>
-              </div>
-              <div className="hidden items-center gap-2 sm:flex">
+              <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={prev}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-300 bg-white shadow-hairline hover:bg-slate-50"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 bg-white/5 text-white backdrop-blur-sm hover:bg-white/10"
                   aria-label="Previous slide"
                 >
                   <ChevronLeft className="h-5 w-5" aria-hidden />
@@ -155,7 +144,7 @@ export function HomeHeroSlider({ slides }: { slides: HeroSlide[] }) {
                 <button
                   type="button"
                   onClick={next}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-300 bg-white shadow-hairline hover:bg-slate-50"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 bg-white/5 text-white backdrop-blur-sm hover:bg-white/10"
                   aria-label="Next slide"
                 >
                   <ChevronRight className="h-5 w-5" aria-hidden />
@@ -163,40 +152,30 @@ export function HomeHeroSlider({ slides }: { slides: HeroSlide[] }) {
               </div>
             </div>
 
-            <div className="mt-3 h-1.5 w-full max-w-[420px] overflow-hidden rounded-full bg-slate-200/80">
+            <div className="mt-4 h-1 w-full max-w-md overflow-hidden rounded-full bg-white/15">
               <motion.div
                 key={`${active.id}-progress-${tick}`}
                 initial={{ width: "0%" }}
                 animate={{ width: pausedRef.current || reduceMotion ? "0%" : "100%" }}
-                transition={{ duration: pausedRef.current || reduceMotion ? 0 : 7.5, ease: "linear" }}
-                className="h-full rounded-full bg-brand-700"
+                transition={{ duration: pausedRef.current || reduceMotion ? 0 : AUTOPLAY_MS / 1000, ease: "linear" }}
+                className="h-full rounded-full bg-amber-brand"
               />
             </div>
           </div>
 
-          <div className="hidden lg:col-span-5 lg:block">
-            <AnimatePresence mode="wait" custom={dir}>
+          <div className="lg:col-span-6 xl:col-span-7">
+            <AnimatePresence mode="wait">
               <motion.div
-                key={`${active.id}-img`}
-                custom={dir}
-                variants={reduceMotion ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } } : { initial: (d: 1 | -1) => ({ opacity: 0, y: 14 }), animate: { opacity: 1, y: 0 }, exit: (d: 1 | -1) => ({ opacity: 0, y: -14 }) }}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                transition={{ duration: reduceMotion ? 0.2 : 0.55, ease: "easeOut" }}
-                className="relative aspect-[4/3] w-full"
+                key={`cards-${index}`}
+                initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.98 }}
+                transition={{ duration: reduceMotion ? 0.15 : 0.45 }}
               >
-                <PlaceholderImage
-                  seed={active.seed}
-                  label={active.title}
-                  theme={active.theme}
-                  className="h-full w-full"
-                  priority={index === 0}
-                />
-                <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-black/5" />
+                <LayeredHeroCards slides={slides} index={index} reduceMotion={!!reduceMotion} />
               </motion.div>
             </AnimatePresence>
-            <p className="mt-3 text-sm font-medium text-slate-600">
+            <p className="mt-4 hidden text-sm font-medium text-white/70 lg:block">
               {active.id === "control"
                 ? "Control-room-led operations with dispatch workflows and full audit trails."
                 : active.id === "guards"
@@ -209,4 +188,3 @@ export function HomeHeroSlider({ slides }: { slides: HeroSlide[] }) {
     </section>
   );
 }
-

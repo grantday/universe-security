@@ -1,42 +1,65 @@
 # Universe Security — marketing website
 
-Next.js on **Vercel** with a **built-in content admin** at `/admin` (no Sanity, no second backend).
+Next.js 15 with **Payload CMS** (SQLite locally, Postgres on production) and **Universe Studio** at `/studio` for day-to-day content edits.
 
-## What you configure on Vercel
+## Stack
+
+| Layer | Technology |
+|-------|------------|
+| Frontend | Next.js App Router, React 19, Tailwind |
+| CMS | Payload 3 (`/admin` for schema/media, `/studio` for editors) |
+| Database | SQLite (`file:./universe-security.db`) locally; `DATABASE_URI` Postgres in production |
+| Forms | Resend (contact, emergency, assessment wizard) |
+
+Legacy `/cms-admin` and `/admin` (Blob JSON) redirect to **Studio**. Content lives in Payload globals and collections—not Vercel Blob.
+
+## Environment variables
+
+Copy `.env.example` to `.env.local` and set:
 
 | Variable | Required | Purpose |
 |----------|----------|---------|
-| `ADMIN_PASSWORD` | Yes | Log in at `/admin` |
-| `RESEND_API_KEY` + email vars | For forms | Contact & emergency |
-| `NEXT_PUBLIC_SITE_URL` | Yes | SEO / sitemap |
-| `BLOB_READ_WRITE_TOKEN` | Auto | Created when you add **Storage → Blob** once (images + saved content) |
-
-That is the full CMS setup — everything runs in **one** Vercel project.
-
-## Edit content
-
-1. Deploy to Vercel with `ADMIN_PASSWORD` set.
-2. In Vercel: **Storage → Create Blob store** (links to the project automatically).
-3. Open `https://your-domain.vercel.app/admin` and sign in.
-4. Edit branding, site details, hero copy → **Save & publish**.
-
-Changes are stored in Vercel Blob and picked up on the next page load (no separate CMS account).
+| `NEXT_PUBLIC_SITE_URL` | Production | Canonical URLs, sitemap, Open Graph, WhatsApp share links (include `https://`) |
+| `NEXT_PUBLIC_SERVER_URL` | Local | Fallback when site URL unset (e.g. `http://localhost:3000`) |
+| `PAYLOAD_SECRET` | Yes | Payload encryption (`openssl rand -base64 32`) |
+| `DATABASE_URI` | Yes | `file:./universe-security.db` locally or Postgres connection string |
+| `PAYLOAD_ADMIN_EMAIL` / `PAYLOAD_ADMIN_PASSWORD` | Seed | First admin user via `npm run seed:payload` |
+| `RESEND_API_KEY` + email vars | Forms | Contact, emergency, assessment submissions |
 
 ## Local development
 
 ```bash
 npm install --legacy-peer-deps
 copy .env.example .env.local
-# Set ADMIN_PASSWORD in .env.local
+# Set PAYLOAD_SECRET, PAYLOAD_ADMIN_PASSWORD, NEXT_PUBLIC_SERVER_URL
+npm run seed:payload   # optional: globals, services, insights, trust content
 npm run dev
 ```
 
-Without Blob locally, saves go to `content/site-content.json` in the repo.
+- Public site: http://localhost:3000  
+- Universe Studio: http://localhost:3000/studio  
+- Payload admin (media, schema): http://localhost:3000/admin  
 
-## Moving off Vercel later
+## Edit content
 
-Export content from the admin (or copy `site-content.json` / Blob JSON). Point the same Next.js app at any host; add Blob or a JSON file on that host. No Sanity migration.
+1. Sign in at `/studio` (Payload user created by seed).
+2. Use **Site** for branding, SEO/OG image, compliance credentials.
+3. Use **Collections** for insights (articles & case studies), client logos, testimonials, inbox (contact + assessment leads).
+4. Upload images in Payload **Media** (`/admin`); reference media IDs in Studio where prompted.
+
+## Features (business)
+
+- Multi-step **security assessment** wizard on `/contact` → structured leads in Studio inbox  
+- **Case studies** on insights with problem / approach / metrics  
+- **Client logos** marquee and **compliance** strip (home + solutions)  
+- **Control Centre** incident simulator (CMS-driven steps + KPIs)  
+- Per-insight **hero images** and OG previews; expanded JSON-LD (Organization, LocalBusiness, Service)
 
 ## Forms
 
-Contact and emergency still use Resend (`app/api/contact`, `app/api/emergency`).
+- `POST /api/contact` — general contact and assessment (`leadType: "assessment"`)  
+- `POST /api/emergency` — emergency hotline submissions  
+
+## Deploy
+
+Single Vercel (or Node) deployment with Postgres `DATABASE_URI`, `NEXT_PUBLIC_SITE_URL` set to the live domain, and Resend configured. Run `npm run seed:payload` once on a fresh database if needed.

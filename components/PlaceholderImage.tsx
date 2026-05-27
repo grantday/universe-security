@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { themedOnlineImageUrl, type ImageTheme } from "@/lib/themed-images";
+import { themedLocalImageUrl, type ImageTheme } from "@/lib/themed-images";
 
 function svgDataUri(svg: string) {
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
@@ -31,7 +31,7 @@ function makeSvg(seed: string, label: string) {
   <g>
     <rect x="70" y="620" width="1060" height="110" rx="28" fill="rgba(255,255,255,0.78)"/>
     <text x="110" y="685" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial" font-size="34" font-weight="700" fill="#0B2545">${label}</text>
-    <text x="110" y="725" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial" font-size="18" font-weight="600" fill="rgba(11,37,69,0.72)">Placeholder image</text>
+    <text x="110" y="725" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial" font-size="18" font-weight="600" fill="rgba(11,37,69,0.72)">Universe Security</text>
     <rect x="980" y="646" width="120" height="58" rx="18" fill="#0B2545"/>
     <text x="1040" y="685" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial" font-size="22" font-weight="800" fill="#ffffff">${initials}</text>
   </g>
@@ -41,7 +41,7 @@ function makeSvg(seed: string, label: string) {
 type Props = {
   seed: string;
   label: string;
-  mode?: "online" | "svg";
+  mode?: "photo" | "svg";
   theme?: ImageTheme;
   className?: string;
   priority?: boolean;
@@ -50,13 +50,18 @@ type Props = {
 export function PlaceholderImage({
   seed,
   label,
-  mode = "online",
+  mode = "photo",
   theme,
   className = "",
   priority = false,
 }: Props) {
-  const online = theme ? themedOnlineImageUrl(theme, seed) : `https://picsum.photos/seed/${encodeURIComponent(seed)}/1200/800`;
-  const src = mode === "online" ? online : svgDataUri(makeSvg(seed, label));
+  const useSvg = mode === "svg";
+  const src = useSvg
+    ? svgDataUri(makeSvg(seed, label))
+    : theme
+      ? themedLocalImageUrl(theme)
+      : svgDataUri(makeSvg(seed, label));
+
   return (
     <div className={`relative overflow-hidden rounded-2xl border border-slate-200/70 shadow-card ${className}`}>
       <Image
@@ -65,9 +70,9 @@ export function PlaceholderImage({
         fill
         sizes="(max-width: 1024px) 100vw, 50vw"
         priority={priority}
+        unoptimized={useSvg}
         style={{ objectFit: "cover" }}
       />
     </div>
   );
 }
-

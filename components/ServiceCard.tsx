@@ -17,7 +17,7 @@ export function ServiceCard({ title, description, items, icon: Icon, theme, imag
       <div className="mb-5 aspect-[16/10] w-full">
         {imageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={imageUrl} alt="" className="h-full w-full rounded-xl object-cover" />
+          <img src={imageUrl} alt={title} className="h-full w-full rounded-xl object-cover" />
         ) : (
           <PlaceholderImage seed={title} label={title} theme={theme} className="h-full w-full" />
         )}

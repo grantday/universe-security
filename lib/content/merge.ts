@@ -1,3 +1,4 @@
+import { resolveLogoUrl } from "@/lib/brand";
 import { defaultSiteContent } from "@/lib/content/defaults";
 import { siteContentSchema, type SiteContent } from "@/lib/content/schema";
 
@@ -6,7 +7,11 @@ export function mergeContent(partial: Partial<SiteContent>): SiteContent {
     ...defaultSiteContent,
     ...partial,
     site: { ...defaultSiteContent.site, ...partial.site },
-    branding: { ...defaultSiteContent.branding, ...partial.branding },
+    branding: {
+      ...defaultSiteContent.branding,
+      ...partial.branding,
+      logoUrl: resolveLogoUrl(partial.branding?.logoUrl),
+    },
     heroSlides: partial.heroSlides ?? defaultSiteContent.heroSlides,
     services: partial.services ?? defaultSiteContent.services,
     testimonials: partial.testimonials ?? defaultSiteContent.testimonials,

@@ -19,7 +19,15 @@ const nextConfig = {
     return config;
   },
   images: {
+    // Avoid long hangs when picsum.photos is slow (service cards still use online mode).
+    minimumCacheTTL: 60,
     remotePatterns: [
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "3000",
+        pathname: "/media/**",
+      },
       {
         protocol: "https",
         hostname: "picsum.photos",

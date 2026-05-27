@@ -18,3 +18,16 @@ export const emergencySchema = z.object({
 });
 
 export type EmergencyInput = z.infer<typeof emergencySchema>;
+
+export const assessmentSchema = z.object({
+  siteType: z.enum(["residential", "commercial", "industrial", "mixed"]),
+  siteSize: z.enum(["small", "medium", "large", "multi-site"]),
+  services: z.array(z.string()).min(1, "Select at least one service"),
+  urgency: z.enum(["planning", "soon", "urgent"]),
+  name: z.string().min(2).max(120),
+  phone: z.string().min(8).max(40),
+  email: z.string().email(),
+  notes: z.string().max(2000).optional(),
+});
+
+export type AssessmentInput = z.infer<typeof assessmentSchema>;

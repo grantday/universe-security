@@ -1,42 +1,32 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import { ArrowRight } from "lucide-react";
 import { PlaceholderImage } from "@/components/PlaceholderImage";
 import { getIcon } from "@/lib/content/icons";
 import type { IconKey } from "@/lib/content/schema";
+import { industryImageTheme } from "@/lib/themed-images";
 
 type Props = {
   title: string;
   blurb: string;
   icon?: LucideIcon;
   iconKey?: IconKey;
+  imageUrl?: string;
 };
 
-export function IndustryCard({ title, blurb, icon, iconKey }: Props) {
+export function IndustryCard({ title, blurb, icon, iconKey, imageUrl }: Props) {
   const Icon = icon ?? getIcon(iconKey ?? "building2");
-  const theme =
-    title === "Residential"
-      ? "residential"
-      : title === "Retail"
-        ? "business"
-        : title === "Banking"
-          ? "accessControl"
-          : title === "Construction"
-            ? "industrial"
-            : title === "Logistics"
-              ? "logistics"
-              : title === "Schools"
-                ? "schools"
-                : title === "Industrial"
-                  ? "industrial"
-                  : title === "Government"
-                    ? "government"
-                    : "events";
+  const theme = industryImageTheme(title);
 
   return (
     <article className="group flex flex-col rounded-2xl border border-slate-200/70 bg-white p-6 shadow-card transition-shadow hover:shadow-soft">
-      <div className="mb-5 aspect-[16/10] w-full">
-        <PlaceholderImage seed={title} label={title} theme={theme} className="h-full w-full" />
+      <div className="relative mb-5 aspect-[16/10] w-full overflow-hidden rounded-xl">
+        {imageUrl ? (
+          <Image src={imageUrl} alt={title} fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
+        ) : (
+          <PlaceholderImage seed={title} label={title} theme={theme} className="h-full w-full" />
+        )}
       </div>
       <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-brand-50 text-brand-700">
         <Icon className="h-5 w-5" aria-hidden />

@@ -3,6 +3,10 @@ import Link from "next/link";
 import { Button } from "@/components/Button";
 import { Check } from "lucide-react";
 import { getContent } from "@/lib/content/get";
+import { getSolutionsPageExtras } from "@/lib/payload/queries";
+import { getClientLogos, getCertifications } from "@/lib/payload/trust-content";
+import { LogoMarquee } from "@/components/home/LogoMarquee";
+import { ComplianceStrip } from "@/components/trust/ComplianceStrip";
 
 export const metadata: Metadata = {
   title: "Solutions",
@@ -11,7 +15,12 @@ export const metadata: Metadata = {
 };
 
 export default async function SolutionsPage() {
-  const { pages } = await getContent();
+  const [{ pages }, footer, logos, certifications] = await Promise.all([
+    getContent(),
+    getSolutionsPageExtras(),
+    getClientLogos(),
+    getCertifications(),
+  ]);
   const page = pages.solutions;
 
   return (
@@ -55,14 +64,18 @@ export default async function SolutionsPage() {
             </div>
           </section>
         ))}
+        <LogoMarquee logos={logos} />
+        <ComplianceStrip heading={certifications.heading} items={certifications.items} />
         <div className="rounded-2xl bg-brand-900 px-6 py-10 text-center text-white sm:px-10">
-          <p className="font-display text-xl font-bold">Need a blended programme?</p>
-          <p className="mt-2 text-white/85">We design multi-site coverage with one control-room view.</p>
+          <p className="font-display text-xl font-bold">{footer?.footerHeading ?? "Need a blended programme?"}</p>
+          <p className="mt-2 text-white/85">
+            {footer?.footerIntro ?? "We design multi-site coverage with one control-room view."}
+          </p>
           <Link
-            href="/contact"
+            href={footer?.footerCtaHref ?? "/contact"}
             className="mt-6 inline-block rounded-xl bg-white px-6 py-3 text-sm font-semibold text-brand-900 hover:bg-brand-50"
           >
-            Speak to our team
+            {footer?.footerCtaLabel ?? "Speak to our team"}
           </Link>
         </div>
       </div>

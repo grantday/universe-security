@@ -19,21 +19,29 @@ async function isAuthed(request: NextRequest) {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith("/cms-admin") && pathname !== "/cms-admin/login") {
+  const isStudio = pathname.startsWith("/studio");
+  const isLegacyAdmin = pathname.startsWith("/cms-admin");
+
+  if (isStudio && pathname !== "/studio/login") {
     if (!(await isAuthed(request))) {
-      const login = new URL("/cms-admin/login", request.url);
+      const login = new URL("/studio/login", request.url);
       login.searchParams.set("next", pathname);
       return NextResponse.redirect(login);
     }
   }
 
-  if (pathname === "/cms-admin/login" && (await isAuthed(request))) {
-    return NextResponse.redirect(new URL("/cms-admin", request.url));
+  if (pathname === "/studio/login" && (await isAuthed(request))) {
+    return NextResponse.redirect(new URL("/studio", request.url));
+  }
+
+  if (isLegacyAdmin) {
+    const target = pathname.replace("/cms-admin", "/studio");
+    return NextResponse.redirect(new URL(target === "/studio/login" ? "/studio/login" : target, request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/cms-admin", "/cms-admin/login", "/cms-admin/:path*"],
+  matcher: ["/studio", "/studio/login", "/studio/:path*", "/cms-admin", "/cms-admin/:path*"],
 };

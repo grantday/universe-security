@@ -1,7 +1,5 @@
-import { AdminPanel } from "@/components/admin/AdminPanel";
+import { redirect } from "next/navigation";
 
-export const dynamic = "force-dynamic";
-
-export default function AdminPage() {
-  return <AdminPanel />;
+export default function CmsAdminRedirect() {
+  redirect("/studio");
 }

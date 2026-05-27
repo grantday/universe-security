@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Image credits",
-  description: "Online image sources used on this site.",
+  description: "Stock photography sources used on this site.",
 };
 
 export default function CreditsPage() {
@@ -12,20 +12,22 @@ export default function CreditsPage() {
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <h1 className="font-display text-4xl font-bold tracking-tight text-brand-900">Image credits</h1>
         <p className="mt-4 text-slate-600">
-          This site currently uses online placeholder photos from Picsum for layout realism. Replace these with your
-          approved brand imagery when ready.
+          Marketing photos are stored locally under <code className="text-sm">/public/images</code> and sourced from
+          Pexels (free licence). Replace any image with your own brand photography via Universe Studio or Payload media
+          when you have approved assets.
         </p>
 
         <div className="mt-10 rounded-2xl border border-slate-200/70 bg-white p-5 shadow-hairline">
-          <p className="font-semibold text-slate-900">Picsum Photos</p>
+          <p className="font-semibold text-slate-900">Pexels</p>
           <p className="mt-2 text-sm text-slate-600">
             Source:{" "}
-            <a className="font-semibold text-brand-700 hover:underline" href="https://picsum.photos/">
-              https://picsum.photos/
+            <a className="font-semibold text-brand-700 hover:underline" href="https://www.pexels.com/">
+              https://www.pexels.com/
             </a>
           </p>
           <p className="mt-2 text-xs text-slate-500">
-            Images are randomly selected per seed; intended for placeholders only.
+            Pexels licence allows free use; attribution is appreciated but not required. Individual photographers are
+            credited on Pexels.
           </p>
         </div>
 
@@ -38,4 +40,3 @@ export default function CreditsPage() {
     </div>
   );
 }
-

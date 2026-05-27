@@ -13,26 +13,49 @@ export type ImageTheme =
   | "government"
   | "logistics";
 
-const keywords: Record<ImageTheme, string[]> = {
-  guards: ["security", "guard", "uniform"],
-  cctv: ["cctv", "security-camera", "surveillance"],
-  controlRoom: ["control-room", "monitoring", "operations"],
-  dispatch: ["radio", "dispatch", "operations"],
-  response: ["patrol", "security-vehicle", "response"],
-  accessControl: ["access-control", "door", "security"],
-  industrial: ["industrial", "warehouse", "factory"],
-  residential: ["home", "residential", "neighborhood"],
-  business: ["office", "commercial", "building"],
-  events: ["event", "crowd", "stadium"],
-  schools: ["school", "campus", "education"],
-  government: ["government", "office", "security"],
-  logistics: ["logistics", "truck", "warehouse"],
+const THEME_FILES: Record<ImageTheme, string> = {
+  guards: "guards.jpg",
+  cctv: "cctv.jpg",
+  controlRoom: "control-room.jpg",
+  dispatch: "dispatch.jpg",
+  response: "response.jpg",
+  accessControl: "access-control.jpg",
+  industrial: "industrial.jpg",
+  residential: "residential.jpg",
+  business: "business.jpg",
+  events: "events.jpg",
+  schools: "schools.jpg",
+  government: "government.jpg",
+  logistics: "logistics.jpg",
 };
 
-export function themedOnlineImageUrl(theme: ImageTheme, seed: string) {
-  const q = keywords[theme].join(",");
-  // Picsum doesn't support keyword search, so we seed by theme+seed to make imagery consistent.
-  // If you want keyword-based photos, we can switch to a provider like Unsplash Source with fixed URLs.
-  return `https://picsum.photos/seed/${encodeURIComponent(`${theme}-${seed}`)}/1200/800`;
+/** Curated security-themed photos (Pexels, stored under /public/images). */
+export function themedLocalImagePath(theme: ImageTheme): string {
+  return `/images/${THEME_FILES[theme]}`;
 }
 
+export function themedLocalImageUrl(theme: ImageTheme): string {
+  return themedLocalImagePath(theme);
+}
+
+/** @deprecated Use themedLocalImageUrl — kept for credits / legacy references. */
+export function themedOnlineImageUrl(theme: ImageTheme, seed: string) {
+  void seed;
+  return themedLocalImageUrl(theme);
+}
+
+const INDUSTRY_THEME: Record<string, ImageTheme> = {
+  Residential: "residential",
+  Retail: "business",
+  Banking: "accessControl",
+  Construction: "industrial",
+  Logistics: "logistics",
+  Schools: "schools",
+  Industrial: "industrial",
+  Government: "government",
+  Events: "events",
+};
+
+export function industryImageTheme(title: string): ImageTheme {
+  return INDUSTRY_THEME[title] ?? "business";
+}

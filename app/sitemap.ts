@@ -1,9 +1,9 @@
 import type { MetadataRoute } from "next";
-import { siteConfig } from "@/lib/site-config";
-import { getInsightSlugs } from "@/lib/insights";
+import { allInsightSlugs } from "@/lib/insights";
+import { getPublicSiteUrl } from "@/lib/public-site-url";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const base = siteConfig.url.replace(/\/$/, "");
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const base = getPublicSiteUrl().replace(/\/$/, "");
   const staticPaths = [
     "",
     "/solutions",
@@ -15,14 +15,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/contact",
     "/privacy",
     "/terms",
+    "/credits",
   ];
-  const insightPaths = getInsightSlugs().map((slug) => `/insights/${slug}`);
+  const insightSlugs = await allInsightSlugs();
+  const insightPaths = insightSlugs.map((slug) => `/insights/${slug}`);
   const all = [...staticPaths, ...insightPaths];
   const lastModified = new Date();
+
   return all.map((path) => ({
     url: `${base}${path}`,
     lastModified,
-    changeFrequency: path.startsWith("/insights/") ? "monthly" : "weekly",
+    changeFrequency: path.startsWith("/insights/") ? ("monthly" as const) : ("weekly" as const),
     priority: path === "" ? 1 : path.startsWith("/insights/") ? 0.6 : 0.8,
   }));
 }
