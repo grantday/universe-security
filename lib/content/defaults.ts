@@ -14,6 +14,7 @@ export const defaultSiteContent: SiteContent = {
     emergencyPhoneDisplay: siteConfig.emergencyPhoneDisplay,
     addressFull: siteConfig.address.full,
     officeHours: siteConfig.officeHours,
+    mapEmbedUrl: siteConfig.mapEmbedUrl,
   },
   branding: {
     logoUrl: DEFAULT_LOGO_PATH,

@@ -16,6 +16,7 @@ export type StudioSiteSettings = {
   emergencyPhone: string;
   emergencyPhoneDisplay: string;
   addressFull: string;
+  mapEmbedUrl: string;
   logoMarkText: string;
   logoUrl: string;
   logoId: number | null;
@@ -58,6 +59,7 @@ function mapSettings(doc: SiteSetting): StudioSiteSettings {
     emergencyPhone: doc.emergencyPhone,
     emergencyPhoneDisplay: doc.emergencyPhoneDisplay,
     addressFull: doc.addressFull,
+    mapEmbedUrl: doc.mapEmbedUrl?.trim() ?? "",
     logoMarkText: doc.logoMarkText ?? "U",
     logoUrl,
     logoId,
@@ -97,6 +99,7 @@ export async function saveStudioSiteSettings(settings: StudioSiteSettings) {
       emergencyPhone: settings.emergencyPhone,
       emergencyPhoneDisplay: settings.emergencyPhoneDisplay,
       addressFull: settings.addressFull,
+      mapEmbedUrl: settings.mapEmbedUrl || undefined,
       logoMarkText: settings.logoMarkText,
       logo: settings.logoId ?? undefined,
       seoTitle: settings.seoTitle || undefined,

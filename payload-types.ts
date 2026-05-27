@@ -924,6 +924,7 @@ export interface SiteSetting {
   emergencyPhone: string;
   emergencyPhoneDisplay: string;
   addressFull: string;
+  mapEmbedUrl?: string | null;
   logo?: (number | null) | Media;
   logoMarkText?: string | null;
   seoTitle?: string | null;
@@ -1206,6 +1207,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   emergencyPhone?: T;
   emergencyPhoneDisplay?: T;
   addressFull?: T;
+  mapEmbedUrl?: T;
   logo?: T;
   logoMarkText?: T;
   seoTitle?: T;

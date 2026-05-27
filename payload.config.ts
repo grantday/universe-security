@@ -59,7 +59,11 @@ export default buildConfig({
     ContactPage,
   ],
   editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET || "",
+  secret: (() => {
+    const s = process.env.PAYLOAD_SECRET;
+    if (!s) throw new Error("PAYLOAD_SECRET env var is required. Set it in Vercel → Project Settings → Environment Variables.");
+    return s;
+  })(),
   typescript: { outputFile: path.resolve(dirname, "payload-types.ts") },
   db: sqliteAdapter({ client: { url: process.env.DATABASE_URI || "file:./universe-security.db" } }),
   sharp,

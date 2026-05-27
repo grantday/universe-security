@@ -90,6 +90,25 @@ export function SiteSettingsEditor() {
         <div className="mt-4">
           <StudioTextArea label="Address" value={settings.addressFull} onChange={(addressFull) => patch({ addressFull })} rows={2} />
         </div>
+        <div className="mt-4">
+          <StudioField
+            label="Google Maps embed URL"
+            value={settings.mapEmbedUrl}
+            onChange={(mapEmbedUrl) => patch({ mapEmbedUrl })}
+            hint='In Google Maps: Share → Embed a map → copy the src="…" value'
+          />
+          {settings.mapEmbedUrl ? (
+            <div className="mt-3 overflow-hidden rounded-lg border border-slate-200">
+              <iframe
+                title="Map preview"
+                src={settings.mapEmbedUrl}
+                className="h-40 w-full"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+          ) : null}
+        </div>
       </div>
 
       <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">

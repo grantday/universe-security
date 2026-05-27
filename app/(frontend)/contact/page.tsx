@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Phone, MapPin, Clock } from "lucide-react";
 import { ContactForm } from "@/components/ContactForm";
 import { AssessmentWizard } from "@/components/contact/AssessmentWizard";
-import { siteConfig } from "@/lib/site-config";
 import { getContent } from "@/lib/content/get";
 
 export const metadata: Metadata = {
@@ -75,16 +74,18 @@ export default async function ContactPage() {
                 </a>
               </p>
             </div>
-            <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-card">
-              <iframe
-                title="Office location map"
-                src={siteConfig.mapEmbedUrl}
-                className="h-64 w-full"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                allowFullScreen
-              />
-            </div>
+            {site.mapEmbedUrl ? (
+              <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-card">
+                <iframe
+                  title="Office location map"
+                  src={site.mapEmbedUrl}
+                  className="h-64 w-full"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  allowFullScreen
+                />
+              </div>
+            ) : null}
           </div>
         </div>
       </div>

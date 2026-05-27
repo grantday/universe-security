@@ -215,6 +215,7 @@ export const siteContentSchema = z.object({
     emergencyPhoneDisplay: z.string().min(1),
     addressFull: z.string().min(1),
     officeHours: z.string().min(1),
+    mapEmbedUrl: z.string().optional().or(z.literal("")),
   }),
   branding: z.object({
     logoUrl: z.string().optional().or(z.literal("")),

@@ -76,6 +76,7 @@ export function mapSiteSettings(settings: SiteSetting): Pick<SiteContent, "site"
       emergencyPhoneDisplay: settings.emergencyPhoneDisplay,
       addressFull: settings.addressFull,
       officeHours: settings.officeHours,
+      mapEmbedUrl: settings.mapEmbedUrl ?? "",
     },
     branding: {
       logoUrl: resolveLogoUrl(

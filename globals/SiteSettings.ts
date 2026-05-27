@@ -74,6 +74,14 @@ export const SiteSettings: GlobalConfig = {
       required: true,
     },
     {
+      name: "mapEmbedUrl",
+      type: "text",
+      admin: {
+        description:
+          "Google Maps embed src URL. In Google Maps click Share → Embed a map → copy the src= value.",
+      },
+    },
+    {
       type: "collapsible",
       label: "Branding",
       fields: [
