@@ -2,6 +2,9 @@ import "server-only";
 
 import { revalidatePath } from "next/cache";
 import { imageUrl } from "@/lib/image";
+import { getSiteContent, saveSiteContent } from "@/lib/content/store";
+import type { SiteContent } from "@/lib/content/schema";
+import { canUsePayloadDatabase } from "@/lib/payload/database";
 import { getPayloadClient } from "@/lib/payload";
 import type { SiteSetting } from "@/payload-types";
 
@@ -74,13 +77,79 @@ function mapSettings(doc: SiteSetting): StudioSiteSettings {
   };
 }
 
+function settingsFromSiteContent(content: SiteContent): StudioSiteSettings {
+  const { site, branding } = content;
+  return {
+    name: site.name,
+    tagline: site.tagline,
+    description: site.description,
+    email: site.email,
+    officeHours: site.officeHours,
+    salesPhone: site.salesPhone,
+    salesPhoneDisplay: site.salesPhoneDisplay,
+    emergencyPhone: site.emergencyPhone,
+    emergencyPhoneDisplay: site.emergencyPhoneDisplay,
+    addressFull: site.addressFull,
+    mapEmbedUrl: site.mapEmbedUrl ?? "",
+    logoMarkText: branding.logoMarkText,
+    logoUrl: branding.logoUrl ?? "",
+    logoId: null,
+    seoTitle: "",
+    seoDescription: "",
+    ogImageId: null,
+    ogImageUrl: "",
+    twitterHandle: "",
+    robotsNoIndex: false,
+    certificationsHeading: "Licensed, insured, and audit-ready",
+    certifications: [],
+  };
+}
+
 export async function getStudioSiteSettings() {
+  if (!canUsePayloadDatabase()) {
+    const content = await getSiteContent();
+    return { settings: settingsFromSiteContent(content), updatedAt: null };
+  }
+
   const payload = await getPayloadClient();
   const doc = (await payload.findGlobal({ slug: "site-settings", depth: 2 })) as SiteSetting;
   return { settings: mapSettings(doc), updatedAt: doc.updatedAt ?? null };
 }
 
 export async function saveStudioSiteSettings(settings: StudioSiteSettings) {
+  if (!canUsePayloadDatabase()) {
+    const content = await getSiteContent();
+    const next: SiteContent = {
+      ...content,
+      site: {
+        ...content.site,
+        name: settings.name,
+        tagline: settings.tagline,
+        description: settings.description,
+        email: settings.email,
+        officeHours: settings.officeHours,
+        salesPhone: settings.salesPhone,
+        salesPhoneDisplay: settings.salesPhoneDisplay,
+        emergencyPhone: settings.emergencyPhone,
+        emergencyPhoneDisplay: settings.emergencyPhoneDisplay,
+        addressFull: settings.addressFull,
+        mapEmbedUrl: settings.mapEmbedUrl,
+      },
+      branding: {
+        ...content.branding,
+        logoMarkText: settings.logoMarkText,
+        logoUrl: settings.logoUrl,
+      },
+    };
+    await saveSiteContent(next);
+    const paths = ["/", "/solutions", "/industries", "/company", "/control-centre", "/technology", "/contact", "/insights"];
+    revalidatePath("/sitemap.xml");
+    for (const p of paths) {
+      revalidatePath(p, "layout");
+    }
+    return { settings, updatedAt: new Date().toISOString() };
+  }
+
   const payload = await getPayloadClient();
   const doc = (await payload.findGlobal({ slug: "site-settings", depth: 0 })) as SiteSetting;
   const { id: _id, updatedAt: _u, createdAt: _c, ...rest } = doc;

@@ -2,6 +2,7 @@ import "server-only";
 
 import { mergeContent } from "@/lib/content/merge";
 import type { SiteContent } from "@/lib/content/schema";
+import { canUsePayloadDatabase } from "@/lib/payload/database";
 import { getPayloadClient } from "@/lib/payload";
 import {
   mapCompanyPage,
@@ -25,7 +26,7 @@ import type { InsightDetailExtended } from "@/lib/payload/insight-types";
 import type { Insight } from "@/payload-types";
 
 async function payloadReady() {
-  return Boolean(process.env.PAYLOAD_SECRET);
+  return canUsePayloadDatabase();
 }
 
 export async function getPublishedMetrics(): Promise<SiteContent["kpis"]> {

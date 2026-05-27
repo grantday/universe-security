@@ -3,6 +3,7 @@ import "server-only";
 import { cache } from "react";
 import { imageUrl } from "@/lib/image";
 import { getPublicSiteUrl, getMetadataBaseUrl } from "@/lib/public-site-url";
+import { canUsePayloadDatabase } from "@/lib/payload/database";
 import { getPayloadClient } from "@/lib/payload";
 import type { SiteSetting } from "@/payload-types";
 
@@ -61,7 +62,7 @@ function mapSeo(doc: SiteSetting): SiteSeoConfig {
 }
 
 export const getSiteSeoConfig = cache(async (): Promise<SiteSeoConfig | null> => {
-  if (!process.env.PAYLOAD_SECRET) return null;
+  if (!canUsePayloadDatabase()) return null;
   try {
     const payload = await getPayloadClient();
     const doc = (await payload.findGlobal({ slug: "site-settings", depth: 2 })) as SiteSetting;
