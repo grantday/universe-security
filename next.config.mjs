@@ -5,6 +5,8 @@ const require = createRequire(import.meta.url);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Standalone bundle for GoDaddy VPS / cPanel Node.js (see deploy/godaddy/README.md).
+  output: "standalone",
   reactStrictMode: true,
   experimental: {
     optimizePackageImports: [],

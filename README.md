@@ -62,4 +62,18 @@ npm run dev
 
 ## Deploy
 
-Single Vercel (or Node) deployment with Postgres `DATABASE_URI`, `NEXT_PUBLIC_SITE_URL` set to the live domain, and Resend configured. Run `npm run seed:payload` once on a fresh database if needed.
+### Vercel (current)
+
+Single deployment with `PAYLOAD_SECRET`, Postgres `DATABASE_URI` (or JSON fallback), `NEXT_PUBLIC_SITE_URL` set to the live domain, and Resend configured. Run `npm run seed:payload` once on a fresh database if needed.
+
+### GoDaddy
+
+This app needs **Node.js hosting** (VPS, or cPanel with Node.js)—not PHP-only shared hosting.
+
+```bash
+npm run build:godaddy
+```
+
+Upload the generated **`godaddy-deploy/`** folder and follow **[deploy/godaddy/README.md](deploy/godaddy/README.md)** (DNS-only, VPS, or cPanel steps).
+
+If you only registered the domain on GoDaddy, you can point DNS to Vercel and keep hosting there—see Option C in that guide.

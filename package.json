@@ -11,7 +11,9 @@
     "generate:importmap": "payload generate:importmap --disable-transpile",
     "payload": "payload",
     "seed:payload": "curl -s -X POST http://localhost:3000/api/dev/seed",
-    "seed:payload:ps": "powershell -Command \"Invoke-WebRequest -Uri http://localhost:3000/api/dev/seed -Method POST -UseBasicParsing\""
+    "seed:payload:ps": "powershell -Command \"Invoke-WebRequest -Uri http://localhost:3000/api/dev/seed -Method POST -UseBasicParsing\"",
+    "build:godaddy": "node scripts/package-godaddy.mjs",
+    "start:standalone": "node start.cjs"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "^1.4.0",

@@ -13,6 +13,7 @@
 
 # production
 /build
+/godaddy-deploy
 
 # misc
 .DS_Store
