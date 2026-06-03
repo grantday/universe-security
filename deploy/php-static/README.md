@@ -2,6 +2,15 @@
 
 Full public-site replica of the Next.js/Vercel frontend, for **shared hosting** (PHP) with **AJAX** contact forms and **SSH** deploy.
 
+## PC vs server (important)
+
+| Where | What runs |
+|-------|-----------|
+| **Your PC (Cursor)** | `npm install`, `npm run dev`, `npm run build:php-static` |
+| **FastComet server** | **PHP only** — upload the zip. No Node, no npm, no build on server |
+
+The upload is plain **PHP, CSS, JavaScript, JSON, and SVG** — not a Node app.
+
 ## Stack
 
 | Layer | Role |
