@@ -66,14 +66,21 @@ npm run dev
 
 Single deployment with `PAYLOAD_SECRET`, Postgres `DATABASE_URI` (or JSON fallback), `NEXT_PUBLIC_SITE_URL` set to the live domain, and Resend configured. Run `npm run seed:payload` once on a fresh database if needed.
 
-### GoDaddy
-
-This app needs **Node.js hosting** (VPS, or cPanel with Node.js)—not PHP-only shared hosting.
+### FastComet / cPanel Node.js (production)
 
 ```bash
+npm run lint
+npx tsc --noEmit
+npm run build
 npm run build:godaddy
 ```
 
-Upload the generated **`godaddy-deploy/`** folder and follow **[deploy/godaddy/README.md](deploy/godaddy/README.md)** (DNS-only, VPS, or cPanel steps).
+Upload **`godaddy-deploy/`** and follow **[deploy/fastcomet/README.md](deploy/fastcomet/README.md)** (cPanel **Setup Node.js App**, startup file `start.cjs`, env vars for `universe-security.org`).
 
-If you only registered the domain on GoDaddy, you can point DNS to Vercel and keep hosting there—see Option C in that guide.
+### GoDaddy (legacy)
+
+Same Node bundle as FastComet: **[deploy/godaddy/README.md](deploy/godaddy/README.md)**.
+
+### GoDaddy basic shared (PHP only)
+
+Static HTML only: **[deploy/godaddy-shared-site/README.md](deploy/godaddy-shared-site/README.md)** — no Studio/CMS.

@@ -13,6 +13,8 @@
     "seed:payload": "curl -s -X POST http://localhost:3000/api/dev/seed",
     "seed:payload:ps": "powershell -Command \"Invoke-WebRequest -Uri http://localhost:3000/api/dev/seed -Method POST -UseBasicParsing\"",
     "build:godaddy": "node scripts/package-godaddy.mjs",
+    "build:fastcomet": "node scripts/package-godaddy.mjs",
+    "build:shared": "cross-env DEPLOY_TARGET=godaddy-shared NEXT_PUBLIC_FORMS_MODE=mailto next build",
     "start:standalone": "node start.cjs"
   },
   "dependencies": {
@@ -50,6 +52,7 @@
     "@types/node": "^20.17.6",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
+    "cross-env": "^10.1.0",
     "eslint": "^9.24.0",
     "eslint-config-next": "^15.3.3",
     "postcss": "^8.4.49",
