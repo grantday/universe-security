@@ -15,6 +15,9 @@
 /build
 /godaddy-deploy
 /php-static-deploy
+deploy/php-static/.env.deploy
+deploy/php-static/content/*.json
+!deploy/php-static/content/.gitkeep
 
 # misc
 .DS_Store

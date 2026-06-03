@@ -1,13 +1,21 @@
-# Temporary PHP site — basic hardening
+# Universe Security — PHP site routing
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  # Block direct access to data and includes
-  RewriteRule ^data/ - [F,L]
+  RewriteBase /
+
+  RewriteRule ^content/ - [F,L]
   RewriteRule ^includes/ - [F,L]
+  RewriteRule ^pages/ - [F,L]
+
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  RewriteRule ^ index.php [L]
 </IfModule>
 
-<FilesMatch "\.(jsonl|log)$">
+<FilesMatch "\.(json|jsonl)$">
   Require all denied
 </FilesMatch>
 
-DirectoryIndex index.php index.html
+DirectoryIndex index.php

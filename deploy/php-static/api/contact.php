@@ -1,16 +1,20 @@
 <?php
-require __DIR__ . '/includes/helpers.php';
+
+require dirname(__DIR__) . '/bootstrap.php';
+
+header('Content-Type: application/json; charset=utf-8');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: ' . url('contact.php'));
+    http_response_code(405);
+    echo json_encode(['ok' => false, 'message' => 'Method not allowed']);
     exit;
 }
 
-$c = site_config();
+$site = Content::site();
+$wantsJson = str_contains($_SERVER['HTTP_ACCEPT'] ?? '', 'application/json');
 
-// Honeypot — bots only
 if (!empty($_POST['website'] ?? '')) {
-    header('Location: ' . url('contact.php') . '?sent=1');
+    echo json_encode(['ok' => true, 'message' => 'Thank you — your message was sent.']);
     exit;
 }
 
@@ -21,7 +25,8 @@ $subject = trim((string) ($_POST['subject'] ?? 'General enquiry'));
 $message = trim((string) ($_POST['message'] ?? ''));
 
 if ($name === '' || $message === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    header('Location: ' . url('contact.php') . '?sent=error');
+    http_response_code(422);
+    echo json_encode(['ok' => false, 'message' => 'Please check the form fields.']);
     exit;
 }
 
@@ -30,10 +35,10 @@ $headers = 'From: noreply@' . ($_SERVER['HTTP_HOST'] ?? 'universe-security.org')
     'Reply-To: ' . $email . "\r\n" .
     'Content-Type: text/plain; charset=UTF-8';
 
-$sent = @mail($c['contact_to'], '[Website] ' . $subject, $body, $headers);
+$sent = @mail($site['email'], '[Website] ' . $subject, $body, $headers);
 
 if (!$sent) {
-    $dataDir = __DIR__ . '/data';
+    $dataDir = dirname(__DIR__) . '/data';
     if (!is_dir($dataDir)) {
         @mkdir($dataDir, 0750, true);
     }
@@ -44,13 +49,21 @@ if (!$sent) {
         'phone' => $phone,
         'subject' => $subject,
         'message' => $message,
-        'ip' => $_SERVER['REMOTE_ADDR'] ?? '',
     ];
     $file = $dataDir . '/inquiries-' . date('Y-m') . '.jsonl';
     $ok = @file_put_contents($file, json_encode($record) . "\n", FILE_APPEND | LOCK_EX);
-    header('Location: ' . url('contact.php') . ($ok ? '?sent=saved' : '?sent=error'));
+    echo json_encode([
+        'ok' => (bool) $ok,
+        'message' => $ok
+            ? 'Thank you — your message was received.'
+            : 'Could not save message. Please email ' . $site['email'] . ' directly.',
+    ]);
     exit;
 }
 
-header('Location: ' . url('contact.php') . '?sent=1');
-exit;
+if (!$wantsJson) {
+    header('Location: ' . url('/contact') . '?sent=1');
+    exit;
+}
+
+echo json_encode(['ok' => true, 'message' => 'Thank you — your message was sent. We will respond shortly.']);

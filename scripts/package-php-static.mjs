@@ -1,5 +1,5 @@
 /**
- * Package deploy/php-static for upload to public_html (PHP shared hosting).
+ * Sync content, package deploy/php-static for upload (PHP + JS + AJAX).
  * Output: ./php-static-deploy/ and Desktop/universe-security-php.zip
  */
 import { cp, mkdir, rm, writeFile } from "node:fs/promises";
@@ -13,7 +13,10 @@ const src = path.join(root, "deploy", "php-static");
 const outDir = path.join(root, "php-static-deploy");
 const brandSrc = path.join(root, "public", "brand", "universe-security-mark.svg");
 
-console.log("Packaging PHP static site…");
+console.log("Syncing content…");
+execSync("node scripts/sync-php-content.mjs", { cwd: root, stdio: "inherit" });
+
+console.log("Packaging PHP site…");
 await rm(outDir, { recursive: true, force: true });
 await mkdir(outDir, { recursive: true });
 await cp(src, outDir, { recursive: true });
@@ -26,33 +29,27 @@ try {
 
 await writeFile(
   path.join(outDir, "README-UPLOAD.txt"),
-  `Universe Security — temporary PHP site
+  `Universe Security — PHP site
 Generated: ${new Date().toISOString()}
 
-Upload ALL files in this folder to public_html/ (or a subfolder).
+Upload ALL files to public_html/ (document root).
 
-1. cPanel File Manager → public_html → Upload → Extract zip
-2. Ensure index.php is in the web root
-3. Visit https://your-domain.org/
-4. Contact form: needs PHP mail() OR saves to data/*.jsonl
+Deploy via SSH: npm run deploy:php-ssh (after configuring deploy/php-static/.env.deploy)
 
-See deploy/php-static/README.md in the Git repo.
+See deploy/php-static/README.md
 `,
   "utf8"
 );
 
 const desktop = path.join(os.homedir(), "Desktop", "universe-security-php.zip");
-const isWin = process.platform === "win32";
-if (isWin) {
+if (process.platform === "win32") {
   execSync(
     `powershell -NoProfile -Command "Compress-Archive -Path '${outDir.replace(/'/g, "''")}\\*' -DestinationPath '${desktop.replace(/'/g, "''")}' -Force"`,
     { stdio: "inherit" }
   );
-  console.log(`Zip: ${desktop}`);
 } else {
   execSync(`cd "${outDir}" && zip -r "${desktop}" .`, { stdio: "inherit" });
-  console.log(`Zip: ${desktop}`);
 }
-
+console.log(`Zip: ${desktop}`);
 console.log(`Folder: ${outDir}`);
 console.log("Done.");

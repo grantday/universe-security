@@ -16,6 +16,7 @@
     "build:fastcomet": "node scripts/package-godaddy.mjs",
     "build:shared": "cross-env DEPLOY_TARGET=godaddy-shared NEXT_PUBLIC_FORMS_MODE=mailto next build",
     "build:php-static": "node scripts/package-php-static.mjs",
+    "deploy:php-ssh": "powershell -ExecutionPolicy Bypass -File scripts/deploy-php-ssh.ps1",
     "start:standalone": "node start.cjs",
     "install:ci": "npm ci --legacy-peer-deps --no-overrides",
     "install:deps": "npm install --legacy-peer-deps --no-overrides"

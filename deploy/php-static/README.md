@@ -1,78 +1,67 @@
-# Temporary PHP + JavaScript site
+# Universe Security — PHP + JavaScript site
 
-Parallel lightweight site for **FastComet / cPanel shared hosting** (`public_html`) while the full Next.js app deploys via GitHub Actions.
+Full public-site replica of the Next.js/Vercel frontend, for **shared hosting** (PHP) with **AJAX** contact forms and **SSH** deploy.
 
-| Full app (Node) | This site (PHP) |
-|-----------------|-----------------|
-| `/studio`, CMS, API | Static pages + contact form |
-| `universe-security-app` | `public_html` |
-| GitHub Actions deploy | Upload zip |
+## Stack
 
----
+| Layer | Role |
+|-------|------|
+| **PHP** | Pages, routing (`index.php`), content from JSON |
+| **JavaScript** | Hero slider, mobile nav, scroll reveal, AJAX contact |
+| **JSON** | `content/site-content.json` + `insights.json` + `extras.json` (synced from repo) |
 
-## Pages
+## Pages (same URLs as Vercel)
 
-- `index.php` — Home
-- `solutions.php` — Solutions overview
-- `company.php` — About
-- `contact.php` — Form + map (JS validation)
-- `store.php` — Store coming soon
-- `send-contact.php` — Form handler (email or `data/*.jsonl` fallback)
+`/`, `/solutions`, `/industries`, `/control-centre`, `/technology`, `/insights`, `/insights/{slug}`, `/company`, `/contact`, `/store`, `/privacy`, `/terms`, `/credits`
 
-Contact details live in **`config.php`** (sync with `lib/site-config.ts`).
+**Not included:** `/studio`, `/cms-admin`, Payload APIs (use Next.js separately if needed).
 
----
+## Update content
 
-## Build zip on your PC
+1. Edit `content/site-content.json` or `content/insights/*.mdx` in the main repo (or via Studio → export/sync later).
+2. Rebuild and deploy:
 
 ```bash
 npm run build:php-static
 ```
 
-Creates:
+## Deploy
 
-- `php-static-deploy/` in the repo
-- `Desktop/universe-security-php.zip`
+### Zip (cPanel File Manager)
 
----
+Upload `Desktop/universe-security-php.zip` to `public_html/` and extract.
 
-## Deploy to FastComet (temporary)
-
-1. **cPanel → File Manager → `public_html`**
-2. (Optional) Backup existing files
-3. Upload **`universe-security-php.zip`** → **Extract**
-4. Confirm **`index.php`** is in the web root
-5. Visit `https://universe-security.org/`
-
-To run **alongside** the Node app, use a subfolder instead:
-
-- Upload to `public_html/temp/`
-- Visit `https://universe-security.org/temp/`
-
-Point the domain to Node when ready; remove or redirect the PHP folder.
-
----
-
-## Contact form
-
-1. Tries PHP `mail()` to `info@universe-security.com`
-2. If mail fails, appends to `data/inquiries-YYYY-MM.jsonl` (download via File Manager)
-
-Check cPanel **Email Deliverability** if messages don’t arrive.
-
----
-
-## Local test (PHP installed)
+### SSH (recommended)
 
 ```bash
-cd deploy/php-static
+cp deploy/php-static/.env.deploy.example deploy/php-static/.env.deploy
+# Edit DEPLOY_HOST, DEPLOY_USER, DEPLOY_PATH
+
+npm run deploy:php-ssh
+```
+
+### Local test
+
+```bash
+npm run build:php-static
+cd php-static-deploy
 php -S localhost:8080
 ```
 
 Open http://localhost:8080
 
----
+## Contact form
 
-## Switch back to full site
+- POST `/api/contact.php` (AJAX or standard form)
+- Uses PHP `mail()` → `info@universe-security.com`
+- Fallback: `data/inquiries-*.jsonl`
 
-When GitHub Actions + Node app are live, remove PHP files from `public_html` or set domain document root back to the Node application URL in cPanel.
+## Keeping in sync with Next.js
+
+| Source of truth | PHP copy |
+|-----------------|----------|
+| `content/site-content.json` | Synced on every `build:php-static` |
+| `content/insights/*.mdx` | Converted to `content/insights.json` |
+| Contact in `lib/site-config.ts` | Edit `site-content.json` `site` block |
+
+After Studio edits on Vercel, export or update `site-content.json` and redeploy PHP.
