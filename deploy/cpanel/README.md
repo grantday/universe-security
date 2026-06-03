@@ -61,6 +61,19 @@ On the server, cPanel refuses deploy if someone edited files in the clone. Fix:
 
 Never edit files inside the cPanel Git clone on the server; always change locally and push.
 
+## `npm error ERESOLVE unable to resolve dependency tree`
+
+The server’s npm is stricter than local installs. This repo includes **`.npmrc`** with `legacy-peer-deps=true`.
+
+After **Update from Remote**, deploy again. Or in Terminal (inside the repo folder):
+
+```bash
+cd ~/repositories/universe-security   # use your actual clone path
+npm install --legacy-peer-deps
+```
+
+Do **not** use plain `npm install` in cPanel’s “Run NPM Install” unless `.npmrc` is present on the server.
+
 ## Build fails on server (out of memory)
 
 Shared hosting builds can run out of RAM. Use **GitHub Actions** instead (`.github/workflows/deploy-fastcomet.yml`) and only use cPanel Git for pull + manual copy, or upgrade plan / build locally and upload `godaddy-deploy/` once.
