@@ -1,0 +1,55 @@
+# Deploy to FastComet on every push to main.
+#
+# Required GitHub repo secrets (Settings → Secrets and variables → Actions):
+#   FASTCOMET_HOST     — e.g. server123.fastcomet.com or your server IP
+#   FASTCOMET_USER     — cPanel username
+#   FASTCOMET_SSH_KEY  — private SSH key (full PEM contents)
+#   FASTCOMET_PATH     — remote app folder, e.g. /home/USER/universe-security-app
+#
+# On FastComet: cPanel → Setup Node.js App → startup file start.cjs, env vars set once in cPanel.
+
+name: Deploy to FastComet
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Build standalone bundle
+        run: npm run build:fastcomet
+
+      - name: Deploy bundle over SSH
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.FASTCOMET_HOST }}
+          username: ${{ secrets.FASTCOMET_USER }}
+          key: ${{ secrets.FASTCOMET_SSH_KEY }}
+          source: "godaddy-deploy/*"
+          target: ${{ secrets.FASTCOMET_PATH }}
+          strip_components: 1
+          overwrite: true
+
+      - name: Restart Node app
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.FASTCOMET_HOST }}
+          username: ${{ secrets.FASTCOMET_USER }}
+          key: ${{ secrets.FASTCOMET_SSH_KEY }}
+          script: |
+            cd "${{ secrets.FASTCOMET_PATH }}"
+            touch tmp/restart.txt 2>/dev/null || true
+            echo "Deploy complete at $(date -u)"
