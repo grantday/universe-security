@@ -15,7 +15,9 @@
     "build:godaddy": "node scripts/package-godaddy.mjs",
     "build:fastcomet": "node scripts/package-godaddy.mjs",
     "build:shared": "cross-env DEPLOY_TARGET=godaddy-shared NEXT_PUBLIC_FORMS_MODE=mailto next build",
-    "start:standalone": "node start.cjs"
+    "start:standalone": "node start.cjs",
+    "install:ci": "npm ci --legacy-peer-deps --no-overrides",
+    "install:deps": "npm install --legacy-peer-deps --no-overrides"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "^1.4.0",

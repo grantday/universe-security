@@ -1,5 +1,19 @@
 # One-step deploy (FastComet)
 
+## npm `EOVERRIDE` on the server?
+
+Do **not** run plain `npm install` in cPanel. Use the **zip** below, or:
+
+```bash
+npm install --legacy-peer-deps --no-overrides
+```
+
+If it still fails, open `package.json` on the server and **delete** the whole `"overrides": { ... }` block if present, then run the command again.
+
+**Easiest:** upload the zip — no npm on the server.
+
+---
+
 ## Right now (no GitHub secrets needed)
 
 A zip is on your **Desktop**: `universe-security-deploy.zip`

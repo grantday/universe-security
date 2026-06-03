@@ -24,10 +24,23 @@ export npm_config_legacy_peer_deps=true
 echo "[deploy] Repository: $REPO_ROOT"
 echo "[deploy] Target app:  $APP_DIR"
 
+# npm 11+ throws EOVERRIDE if package.json has an "overrides" entry for a direct dependency (e.g. next).
+node -e "
+const fs = require('fs');
+const p = 'package.json';
+const j = JSON.parse(fs.readFileSync(p, 'utf8'));
+if (j.overrides) {
+  delete j.overrides;
+  fs.writeFileSync(p, JSON.stringify(j, null, 2) + '\n');
+  console.log('[deploy] Removed package.json overrides (fixes EOVERRIDE on npm 11)');
+}
+" 2>/dev/null || true
+
+NPM_FLAGS="--legacy-peer-deps --no-overrides"
 if [ -f package-lock.json ]; then
-  npm ci --legacy-peer-deps
+  npm ci $NPM_FLAGS
 else
-  npm install --legacy-peer-deps
+  npm install $NPM_FLAGS
 fi
 npm run build:fastcomet
 

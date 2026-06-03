@@ -18,6 +18,21 @@ Use this guide only if you want cPanel deploy to work too.
 
 ---
 
+## `npm error EOVERRIDE`
+
+npm 11 errors when `package.json` has `"overrides"` for `next` while `next` is also listed under `dependencies`.
+
+```bash
+cd ~/repositories/universe-security
+npm install --legacy-peer-deps --no-overrides
+```
+
+Or delete the `"overrides": { ... }` block from `package.json` on the server.
+
+**Easiest:** upload **`universe-security-deploy.zip`** to `universe-security-app/` — see **ONE-STEP.md** (no npm on server).
+
+---
+
 ## Fix 1 — `.cpanel.yml` missing on the server
 
 The file is in GitHub on `main`, but your **server clone** may be old.
