@@ -66,6 +66,11 @@ npm run dev
 
 Single deployment with `PAYLOAD_SECRET`, Postgres `DATABASE_URI` (or JSON fallback), `NEXT_PUBLIC_SITE_URL` set to the live domain, and Resend configured. Run `npm run seed:payload` once on a fresh database if needed.
 
+### Work in Cursor → push (no server npm)
+
+**[CURSOR-WORKFLOW.md](CURSOR-WORKFLOW.md)** — fix locally with `npm run dev`, then `git push origin main`.  
+Use **Vercel** (easiest) or **GitHub Actions → FastComet** (see **[DEPLOY.md](DEPLOY.md)**). Never run `npm install` on FastComet.
+
 ### FastComet (production) — push to deploy
 
 **One-time setup**, then only `git push origin main`. Full steps: **[DEPLOY.md](DEPLOY.md)**.
