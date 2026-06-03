@@ -159,3 +159,5 @@ Git clone in cPanel is optional; **GitHub Actions** is your deploy path.
 | Missing secrets | Action stops at first step with list of missing secret names |
 
 Manual fallback: `npm run build:fastcomet` → upload `godaddy-deploy` → Restart.
+
+**Need the site live immediately on shared hosting?** Use the temporary PHP site: `npm run build:php-static` → **[deploy/php-static/README.md](deploy/php-static/README.md)**.

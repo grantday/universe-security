@@ -83,4 +83,6 @@ Same Node bundle as FastComet: **[deploy/godaddy/README.md](deploy/godaddy/READM
 
 ### GoDaddy basic shared (PHP only)
 
-Static HTML only: **[deploy/godaddy-shared-site/README.md](deploy/godaddy-shared-site/README.md)** — no Studio/CMS.
+**Temporary PHP site (shared hosting):** `npm run build:php-static` → upload zip — **[deploy/php-static/README.md](deploy/php-static/README.md)**
+
+Static HTML only: **[deploy/godaddy-shared-site/README.md](deploy/godaddy-shared-site/README.md)** — older HTML-only fallback.
