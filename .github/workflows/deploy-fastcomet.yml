@@ -1,6 +1,6 @@
 # Push to main → build on GitHub → upload to FastComet Node app.
 # One-time secrets: FASTCOMET_HOST, FASTCOMET_USER, FASTCOMET_SSH_KEY, FASTCOMET_PATH
-# See DEPLOY.md
+# See SETUP-OPTION-2.md
 
 name: Deploy to FastComet
 
@@ -12,8 +12,25 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ secrets.FASTCOMET_HOST != '' && secrets.FASTCOMET_USER != '' && secrets.FASTCOMET_SSH_KEY != '' && secrets.FASTCOMET_PATH != '' }}
     steps:
+      - name: Check FastComet secrets
+        env:
+          FASTCOMET_HOST: ${{ secrets.FASTCOMET_HOST }}
+          FASTCOMET_USER: ${{ secrets.FASTCOMET_USER }}
+          FASTCOMET_SSH_KEY: ${{ secrets.FASTCOMET_SSH_KEY }}
+          FASTCOMET_PATH: ${{ secrets.FASTCOMET_PATH }}
+        run: |
+          missing=0
+          [ -z "$FASTCOMET_HOST" ] && echo "::error::Missing secret FASTCOMET_HOST — see SETUP-OPTION-2.md" && missing=1
+          [ -z "$FASTCOMET_USER" ] && echo "::error::Missing secret FASTCOMET_USER" && missing=1
+          [ -z "$FASTCOMET_SSH_KEY" ] && echo "::error::Missing secret FASTCOMET_SSH_KEY" && missing=1
+          [ -z "$FASTCOMET_PATH" ] && echo "::error::Missing secret FASTCOMET_PATH" && missing=1
+          if [ "$missing" -eq 1 ]; then
+            echo "::notice::Add all four secrets at https://github.com/grantday/universe-security/settings/secrets/actions"
+            exit 1
+          fi
+          echo "FastComet secrets present — deploying to $FASTCOMET_PATH"
+
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
@@ -42,6 +59,7 @@ jobs:
           host: ${{ secrets.FASTCOMET_HOST }}
           username: ${{ secrets.FASTCOMET_USER }}
           key: ${{ secrets.FASTCOMET_SSH_KEY }}
+          port: 22
           source: deploy.tar.gz
           target: /tmp
 
@@ -51,6 +69,7 @@ jobs:
           host: ${{ secrets.FASTCOMET_HOST }}
           username: ${{ secrets.FASTCOMET_USER }}
           key: ${{ secrets.FASTCOMET_SSH_KEY }}
+          port: 22
           script: |
             set -e
             APP="${{ secrets.FASTCOMET_PATH }}"
@@ -60,10 +79,3 @@ jobs:
             mkdir -p "$APP/tmp"
             touch "$APP/tmp/restart.txt"
             echo "Deployed to $APP at $(date -u)"
-
-  secrets-missing:
-    runs-on: ubuntu-latest
-    if: ${{ secrets.FASTCOMET_HOST == '' || secrets.FASTCOMET_USER == '' || secrets.FASTCOMET_SSH_KEY == '' || secrets.FASTCOMET_PATH == '' }}
-    steps:
-      - run: |
-          echo "::warning::FastComet deploy skipped — add FASTCOMET_HOST, FASTCOMET_USER, FASTCOMET_SSH_KEY, FASTCOMET_PATH in GitHub repo secrets. See DEPLOY.md"

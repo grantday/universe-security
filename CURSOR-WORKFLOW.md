@@ -41,12 +41,12 @@ That’s your whole deploy step.
 
 Env vars: set in Vercel project settings (same as `.env.local`).
 
-### Option B — FastComet runs the app, GitHub builds it
+### Option B — FastComet + GitHub Actions (**your setup**)
 
 FastComet **only runs** `start.cjs` (no npm on server).  
-**GitHub Actions** builds after each push and uploads the zip bundle.
+**GitHub Actions** builds after each push and uploads the bundle.
 
-One-time: add GitHub secrets in **DEPLOY.md** (`FASTCOMET_HOST`, `FASTCOMET_USER`, `FASTCOMET_SSH_KEY`, `FASTCOMET_PATH`).
+**One-time setup:** follow **[SETUP-OPTION-2.md](SETUP-OPTION-2.md)** (cPanel Node app + 4 GitHub secrets).
 
 You still need the Node app on FastComet (`universe-security-app` + `start.cjs`) but you never touch npm there.
 
@@ -73,10 +73,9 @@ Slower, but no server npm.
 
 ---
 
-## Recommended for you
+## Your path
 
-**Vercel + `git push`** if you want zero FastComet Node hassle.  
-**GitHub Actions + FastComet** if the site must stay on FastComet hosting.
+**Option B** — **[SETUP-OPTION-2.md](SETUP-OPTION-2.md)** → then only `git push origin main`.
 
 ---
 

@@ -48,6 +48,8 @@ Upload **only the first time** if GitHub Actions is not ready yet: run `npm run 
 
 ### 2) GitHub Actions secrets (automatic deploy)
 
+**Step-by-step:** **[SETUP-OPTION-2.md](SETUP-OPTION-2.md)**
+
 GitHub → your repo → **Settings → Secrets and variables → Actions → New repository secret**
 
 | Secret name | What to put |
