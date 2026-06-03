@@ -25,11 +25,6 @@ $nav = [
     <script defer src="<?= e(url('assets/js/site.js')) ?>"></script>
   </head>
   <body data-page="<?= e($currentPage ?? 'home') ?>">
-    <?php if (!empty($c['temp_banner'])): ?>
-    <div class="temp-banner" role="status">
-      Temporary site — full CMS version is deploying. Contact details below are current.
-    </div>
-    <?php endif; ?>
     <header class="nav">
       <div class="container nav-inner">
         <a class="logo" href="<?= e(url('index.php')) ?>"><?= e($c['name']) ?></a>
