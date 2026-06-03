@@ -1,0 +1,11 @@
+---
+# cPanel Git deployment — https://docs.cpanel.net/knowledge-base/web-services/guide-to-git-deployment/
+# Requirements: this file at repo root, clean working tree on the deployed branch.
+#
+# 1) Match CPANEL_APP_DIR to Setup Node.js App → Application root (default: ~/universe-security-app)
+# 2) Push to GitHub, then in cPanel: Git Version Control → Update from Remote → Deploy HEAD Commit
+# 3) Or push directly to the cPanel remote for automatic deploy (post-receive hook)
+
+deployment:
+  tasks:
+    - /bin/bash deploy/scripts/cpanel-post-deploy.sh

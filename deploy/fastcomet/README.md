@@ -43,10 +43,14 @@ One-time setup in GitHub → **Settings → Secrets → Actions**:
 
 Env vars (`PAYLOAD_SECRET`, `DATABASE_URI`, etc.) stay in **cPanel → Node.js App** — set once.
 
-### Option B — Git pull on the server
+### Option B — cPanel Git deploy (`.cpanel.yml`)
 
-1. cPanel → **Git Version Control** → clone your GitHub repo
-2. After each push: `git pull`, `npm run build:fastcomet`, restart Node app in cPanel
+Repo includes **`.cpanel.yml`** per [cPanel Git deployment](https://docs.cpanel.net/knowledge-base/web-services/guide-to-git-deployment/).
+
+1. Clone repo in cPanel → **Git Version Control**
+2. Node app in **`~/universe-security-app`** (startup `start.cjs`) — see **`deploy/cpanel/README.md`**
+3. After `git push` to GitHub: **Update from Remote** → **Deploy HEAD Commit**
+4. Working tree on server must be **clean** (no uncommitted edits in the clone)
 
 ### Option C — Vercel + GitHub (easiest auto-deploy)
 
