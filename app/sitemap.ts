@@ -2,6 +2,8 @@ import type { MetadataRoute } from "next";
 import { allInsightSlugs } from "@/lib/insights";
 import { getPublicSiteUrl } from "@/lib/public-site-url";
 
+export const dynamic = "force-static";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = getPublicSiteUrl().replace(/\/$/, "");
   const staticPaths = [

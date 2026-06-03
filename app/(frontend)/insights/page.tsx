@@ -7,12 +7,10 @@ export const metadata: Metadata = {
   description: "Security alerts, crime prevention tips, industry updates, and case studies from Universe Security.",
 };
 
-type Props = { searchParams: Promise<{ page?: string }> };
+export const dynamic = "force-static";
 
-export default async function InsightsPage({ searchParams }: Props) {
-  const { page: pageParam } = await searchParams;
-  const page = Math.max(1, Number(pageParam) || 1);
-  const { items: posts } = await listInsights(page, 9);
+export default async function InsightsPage() {
+  const { items: posts } = await listInsights(1, 50);
 
   return (
     <div className="bg-slate-50 py-14 sm:py-20">
@@ -44,13 +42,6 @@ export default async function InsightsPage({ searchParams }: Props) {
             </li>
           ))}
         </ul>
-        {page > 1 ? (
-          <div className="mt-10">
-            <Link href="/insights" className="text-sm font-semibold text-brand-700 hover:text-brand-900">
-              ← Back to latest
-            </Link>
-          </div>
-        ) : null}
       </div>
     </div>
   );

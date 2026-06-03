@@ -15,20 +15,26 @@ const stashRoot = path.join(root, ".static-export-stash");
 const outDir = path.join(root, "static-site-deploy");
 const nextOut = path.join(root, "out");
 
+const payloadApp = path.join(root, "app", "(payload)");
+
 const moves = [
   { from: path.join(frontend, "api"), name: "api" },
   { from: path.join(frontend, "studio"), name: "studio" },
   { from: path.join(frontend, "cms-admin"), name: "cms-admin" },
+  { from: payloadApp, name: "payload-app" },
+  { from: path.join(frontend, "icon.tsx"), name: "icon.tsx", isFile: true },
+  { from: path.join(frontend, "opengraph-image.tsx"), name: "opengraph-image.tsx", isFile: true },
 ];
 
 async function stashRoutes() {
   await mkdir(stashRoot, { recursive: true });
-  for (const { from, name } of moves) {
+  for (const move of moves) {
+    const { from, name, isFile } = move;
     const to = path.join(stashRoot, name);
     try {
       await rm(to, { recursive: true, force: true });
       await rename(from, to);
-      console.log(`Stashed ${name}/`);
+      console.log(`Stashed ${name}${isFile ? "" : "/"}`);
     } catch (err) {
       if (err && typeof err === "object" && "code" in err && err.code === "ENOENT") {
         console.warn(`Skip stash (missing): ${from}`);
@@ -40,12 +46,13 @@ async function stashRoutes() {
 }
 
 async function restoreRoutes() {
-  for (const { from, name } of moves) {
+  for (const move of moves) {
+    const { from, name, isFile } = move;
     const fromStash = path.join(stashRoot, name);
     try {
       await rm(from, { recursive: true, force: true });
       await rename(fromStash, from);
-      console.log(`Restored ${name}/`);
+      console.log(`Restored ${name}${isFile ? "" : "/"}`);
     } catch {
       /* already restored */
     }
