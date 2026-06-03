@@ -1,55 +1,46 @@
 #!/bin/bash
-# Runs from repository root when cPanel executes .cpanel.yml (Deploy HEAD Commit / push deploy).
-# Set CPANEL_APP_DIR in cPanel → Git → Manage → Deploy → Environment Variables if needed,
-# or edit the default below to match Setup Node.js App → Application root.
+# cPanel Git deploy hook — FastComet Essential / shared hosting cannot run npm install
+# (esbuild SIGABRT, uv_thread_create failures). Deploy the pre-built zip instead.
+# See ONE-STEP.md
 
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 APP_DIR="${CPANEL_APP_DIR:-$HOME/universe-security-app}"
 
-cd "$REPO_ROOT"
-
-# cPanel Node.js apps often expose npm/node via the app virtualenv — try common paths.
-if [ -d "$HOME/nodevenv" ]; then
-  NODE_BIN="$(find "$HOME/nodevenv" -maxdepth 4 -type f -name node 2>/dev/null | head -1 || true)"
-  if [ -n "$NODE_BIN" ]; then
-    export PATH="$(dirname "$NODE_BIN"):$PATH"
-  fi
-fi
-
-export NODE_ENV=production
-export npm_config_legacy_peer_deps=true
-
 echo "[deploy] Repository: $REPO_ROOT"
-echo "[deploy] Target app:  $APP_DIR"
+echo "[deploy] Node app:     $APP_DIR"
 
-# npm 11+ throws EOVERRIDE if package.json has an "overrides" entry for a direct dependency (e.g. next).
-node -e "
-const fs = require('fs');
-const p = 'package.json';
-const j = JSON.parse(fs.readFileSync(p, 'utf8'));
-if (j.overrides) {
-  delete j.overrides;
-  fs.writeFileSync(p, JSON.stringify(j, null, 2) + '\n');
-  console.log('[deploy] Removed package.json overrides (fixes EOVERRIDE on npm 11)');
-}
-" 2>/dev/null || true
-
-NPM_FLAGS="--legacy-peer-deps --no-overrides"
-if [ -f package-lock.json ]; then
-  npm ci $NPM_FLAGS
-else
-  npm install $NPM_FLAGS
+if [ -f "$APP_DIR/server.js" ] && [ -f "$APP_DIR/start.cjs" ]; then
+  mkdir -p "$APP_DIR/tmp"
+  touch "$APP_DIR/tmp/restart.txt" 2>/dev/null || true
+  echo "[deploy] App bundle already at $APP_DIR — restarted. No server npm build (not supported on this plan)."
+  exit 0
 fi
-npm run build:fastcomet
 
-mkdir -p "$APP_DIR"
-# Sync standalone bundle into the Node.js application root (not public_html).
-/bin/cp -R "$REPO_ROOT/godaddy-deploy/." "$APP_DIR/"
+cat <<EOF
 
-# Passenger / cPanel Node restart signal (ignored if not used).
-mkdir -p "$APP_DIR/tmp"
-touch "$APP_DIR/tmp/restart.txt" 2>/dev/null || true
+================================================================================
+  SERVER npm install IS NOT SUPPORTED on FastComet Essential (memory/thread limits).
+  Your error (esbuild SIGABRT / uv_thread_create) is expected on shared hosting.
+================================================================================
 
-echo "[deploy] Done. Restart the Node.js app in cPanel if the site did not reload automatically."
+  DO THIS INSTEAD:
+
+  1. On your PC, run:
+       powershell -ExecutionPolicy Bypass -File scripts/deploy.ps1
+
+  2. cPanel File Manager → open:
+       $APP_DIR
+
+  3. Upload and extract:
+       universe-security-deploy.zip  (from your Desktop)
+
+  4. cPanel → Setup Node.js App → Restart
+
+  Or use GitHub Actions deploy (DEPLOY.md) — builds in the cloud, not on this server.
+
+================================================================================
+
+EOF
+exit 1

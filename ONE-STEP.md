@@ -1,5 +1,15 @@
 # One-step deploy (FastComet)
 
+## npm crashes on the server (`SIGABRT`, `esbuild`, `uv_thread_create`)?
+
+**Normal on FastComet Essential.** Shared hosting cannot compile `esbuild` / full `npm install` (thread and memory limits).
+
+**Do not run `npm install` in `repositories/universe-security` or in the Node virtualenv.**
+
+Use the **zip** below only.
+
+---
+
 ## npm `EOVERRIDE` on the server?
 
 Do **not** run plain `npm install` in cPanel. Use the **zip** below, or:

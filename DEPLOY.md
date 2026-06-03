@@ -10,6 +10,8 @@ git push origin main
 
 GitHub builds the site and uploads it to FastComet. No manual cPanel deploy, no `npm install` on the server.
 
+**FastComet Essential cannot run `npm install` on the server** (esbuild / `SIGABRT` / thread limits). Always use the **Desktop zip** (ONE-STEP.md) or **GitHub Actions** — never build in `repositories/universe-security` on cPanel.
+
 ---
 
 ## One-time setup (≈10 minutes)
