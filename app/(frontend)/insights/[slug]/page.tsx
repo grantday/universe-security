@@ -22,7 +22,8 @@ import { getContent } from "@/lib/content/get";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export const dynamic = "force-dynamic";
+// Pre-rendered at build time (required for static export; Vercel rebuilds on deploy).
+export const dynamic = "force-static";
 
 export async function generateStaticParams() {
   const slugs = await allInsightSlugs();

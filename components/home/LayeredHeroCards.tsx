@@ -8,6 +8,9 @@ import type { HeroSlide } from "@/lib/content/schema";
 import { cn } from "@/lib/cn";
 
 function slideImageSrc(slide: HeroSlide) {
+  if (process.env.NEXT_PUBLIC_FORMS_MODE === "mailto" || process.env.DEPLOY_TARGET === "godaddy-shared") {
+    return themedLocalImageUrl(slide.theme);
+  }
   return slide.imageUrl?.trim() || themedLocalImageUrl(slide.theme);
 }
 

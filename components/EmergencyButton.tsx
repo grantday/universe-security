@@ -11,6 +11,16 @@ export function EmergencyButton({ site }: { site: SiteInfo }) {
   const [message, setMessage] = useState("");
 
   async function sendSilentAlert() {
+    const staticMode = process.env.NEXT_PUBLIC_FORMS_MODE === "mailto";
+    if (staticMode) {
+      const subject = encodeURIComponent("Emergency alert (website)");
+      const body = encodeURIComponent(
+        `Optional note: ${message || "(none)"}\n\nPlease call ${site.emergencyPhoneDisplay} for immediate response.`,
+      );
+      window.location.href = `mailto:${site.email}?subject=${subject}&body=${body}`;
+      setStatus("sent");
+      return;
+    }
     setStatus("sending");
     let lat: number | undefined;
     let lng: number | undefined;

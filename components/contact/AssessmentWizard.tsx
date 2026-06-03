@@ -61,6 +61,16 @@ export function AssessmentWizard({ officeHours }: Props) {
 
   async function onSubmit(data: AssessmentInput) {
     setServerError("");
+    const staticMode = process.env.NEXT_PUBLIC_FORMS_MODE === "mailto";
+    if (staticMode) {
+      const subject = encodeURIComponent("Security assessment request");
+      const body = encodeURIComponent(
+        `Site: ${data.siteType} / ${data.siteSize}\nServices: ${data.services.join(", ")}\nUrgency: ${data.urgency}\n\nName: ${data.name}\nPhone: ${data.phone}\nEmail: ${data.email}\n\nNotes:\n${data.notes ?? ""}\n`,
+      );
+      window.location.href = `mailto:info@universe-security.com?subject=${subject}&body=${body}`;
+      setDone(true);
+      return;
+    }
     const res = await fetch("/api/contact", {
       method: "POST",
       headers: { "Content-Type": "application/json" },

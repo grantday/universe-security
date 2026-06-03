@@ -4,9 +4,11 @@ import { withPayload } from "@payloadcms/next/withPayload";
 const require = createRequire(import.meta.url);
 
 /** @type {import('next').NextConfig} */
+const isSharedStatic = process.env.DEPLOY_TARGET === "godaddy-shared";
 const nextConfig = {
-  // Standalone bundle for GoDaddy VPS / cPanel Node.js (see deploy/godaddy/README.md).
-  output: "standalone",
+  // Standalone bundle for GoDaddy VPS / cPanel Node.js; static export for GoDaddy basic shared.
+  output: isSharedStatic ? "export" : "standalone",
+  trailingSlash: isSharedStatic ? true : undefined,
   reactStrictMode: true,
   experimental: {
     optimizePackageImports: [],
@@ -21,6 +23,8 @@ const nextConfig = {
     return config;
   },
   images: {
+    // `next/image` optimization requires a server. Shared hosting export must be unoptimized.
+    unoptimized: isSharedStatic,
     // Avoid long hangs when picsum.photos is slow (service cards still use online mode).
     minimumCacheTTL: 60,
     remotePatterns: [
@@ -42,4 +46,4 @@ const nextConfig = {
   },
 };
 
-export default withPayload(nextConfig);
+export default isSharedStatic ? nextConfig : withPayload(nextConfig);

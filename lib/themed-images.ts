@@ -35,6 +35,9 @@ export function themedLocalImagePath(theme: ImageTheme): string {
 }
 
 export function themedLocalImageUrl(theme: ImageTheme): string {
+  if (process.env.DEPLOY_TARGET === "godaddy-shared") {
+    return `https://picsum.photos/seed/universe-${theme}/1200/800`;
+  }
   return themedLocalImagePath(theme);
 }
 

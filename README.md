@@ -83,6 +83,8 @@ Same Node bundle as FastComet: **[deploy/godaddy/README.md](deploy/godaddy/READM
 
 ### GoDaddy basic shared (PHP only)
 
-**PHP site (full public replica, shared hosting + SSH):** `npm run build:php-static` · `npm run deploy:php-ssh` — **[deploy/php-static/README.md](deploy/php-static/README.md)**
+**FastComet (same look as Vercel, no server npm):** `npm run build:site` · **[FASTCOMET-SITE.md](FASTCOMET-SITE.md)**
+
+Legacy simplified PHP site: `npm run build:php-static` — **[deploy/php-static/README.md](deploy/php-static/README.md)**
 
 Static HTML only: **[deploy/godaddy-shared-site/README.md](deploy/godaddy-shared-site/README.md)** — older HTML-only fallback.

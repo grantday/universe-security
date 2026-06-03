@@ -15,6 +15,9 @@
 /build
 /godaddy-deploy
 /php-static-deploy
+/static-site-deploy
+/.static-export-stash
+/out
 deploy/php-static/.env.deploy
 deploy/php-static/content/*.json
 !deploy/php-static/content/.gitkeep
