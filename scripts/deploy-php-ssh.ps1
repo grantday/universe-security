@@ -27,27 +27,44 @@ if (-not (Test-Path $bundle)) {
   exit 1
 }
 
+$batchMode = "yes"
 if ($DEPLOY_KEY -and (Test-Path $DEPLOY_KEY)) {
-  $head = Get-Content $DEPLOY_KEY -TotalCount 5 -Raw
+  $head = (Get-Content $DEPLOY_KEY -TotalCount 5) -join "`n"
   if ($head -match "ENCRYPTED|bcrypt") {
-    Write-Host "Note: Private key has a passphrase. Run once before deploy:"
-    Write-Host "  Start-Service ssh-agent; ssh-add $DEPLOY_KEY"
-    Write-Host "Or use a deploy key with no passphrase (see deploy/php-static/README.md)"
+    $batchMode = "no"
+    Write-Host "Encrypted key - you may be prompted for the passphrase."
+    Write-Host "Or run first: Start-Service ssh-agent; ssh-add $DEPLOY_KEY"
   }
 }
 
 $target = "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/"
-$sshOpts = @("-o", "BatchMode=yes", "-o", "ConnectTimeout=20", "-o", "StrictHostKeyChecking=accept-new")
-Write-Host "Building bundle…"
-Set-Location $root
-npm run build:php-static | Out-Host
+$sshOpts = @("-o", "BatchMode=$batchMode", "-o", "ConnectTimeout=60", "-o", "StrictHostKeyChecking=accept-new")
+if (-not (Test-Path (Join-Path $bundle "index.html"))) {
+  Write-Host "Building bundle..."
+  Set-Location $root
+  npm run build:site | Out-Host
+  if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+} else {
+  Write-Host "Using existing static-site-deploy/ (run npm run build:site to rebuild)."
+  Set-Location $root
+}
 
-Write-Host "Uploading to $target …"
+$askpass = Join-Path $root "scripts\ssh-askpass.cmd"
+if ($DEPLOY_PASSPHRASE) {
+  $env:DEPLOY_PASSPHRASE = $DEPLOY_PASSPHRASE
+  $env:SSH_ASKPASS = $askpass
+  $env:SSH_ASKPASS_REQUIRE = "force"
+  Write-Host "Using DEPLOY_PASSPHRASE from .env.deploy for SSH."
+}
+
+Write-Host "Uploading to $target ..."
 if ($DEPLOY_KEY) {
   scp @sshOpts -i $DEPLOY_KEY -r "$bundle\*" $target
 } else {
   scp @sshOpts -r "$bundle\*" $target
 }
+Remove-Item Env:SSH_ASKPASS -ErrorAction SilentlyContinue
+Remove-Item Env:SSH_ASKPASS_REQUIRE -ErrorAction SilentlyContinue
 if ($LASTEXITCODE -ne 0) {
   Write-Host "Upload failed. If your key has a passphrase, run: ssh-add $DEPLOY_KEY"
   exit $LASTEXITCODE
