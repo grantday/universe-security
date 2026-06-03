@@ -1,0 +1,2 @@
+.cpanel.yml text eol=lf
+deploy/scripts/cpanel-post-deploy.sh text eol=lf

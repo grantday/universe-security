@@ -59,10 +59,11 @@ GitHub → your repo → **Settings → Secrets and variables → Actions → Ne
 
 ---
 
-### 3) cPanel Git clone (optional — for code backup only)
+### 3) cPanel Git clone (optional)
 
-You can keep the repo in `~/repositories/universe-security` for reference.  
-You **do not** need to click **Deploy HEAD Commit** if GitHub Actions is configured.
+Repo in `~/repositories/` is optional. **Ignore** cPanel **Deploy HEAD Commit** if you use GitHub Actions.
+
+If cPanel says **“The system cannot deploy”** (`.cpanel.yml` / uncommitted changes), see **[deploy/cpanel/FIX-DEPLOY-BLOCKED.md](deploy/cpanel/FIX-DEPLOY-BLOCKED.md)** — usually fixed with `git reset --hard origin/main` and `git clean -fd` in the clone folder.
 
 ---
 
