@@ -1,12 +1,6 @@
-# Deploy to FastComet on every push to main.
-#
-# Required GitHub repo secrets (Settings → Secrets and variables → Actions):
-#   FASTCOMET_HOST     — e.g. server123.fastcomet.com or your server IP
-#   FASTCOMET_USER     — cPanel username
-#   FASTCOMET_SSH_KEY  — private SSH key (full PEM contents)
-#   FASTCOMET_PATH     — remote app folder, e.g. /home/USER/universe-security-app
-#
-# On FastComet: cPanel → Setup Node.js App → startup file start.cjs, env vars set once in cPanel.
+# Push to main → build on GitHub → upload to FastComet Node app.
+# One-time secrets: FASTCOMET_HOST, FASTCOMET_USER, FASTCOMET_SSH_KEY, FASTCOMET_PATH
+# See DEPLOY.md
 
 name: Deploy to FastComet
 
@@ -18,6 +12,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    if: ${{ secrets.FASTCOMET_HOST != '' && secrets.FASTCOMET_USER != '' && secrets.FASTCOMET_SSH_KEY != '' && secrets.FASTCOMET_PATH != '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -27,29 +22,48 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm install --legacy-peer-deps
+        run: npm ci --legacy-peer-deps
 
       - name: Build standalone bundle
         run: npm run build:fastcomet
+        env:
+          NODE_ENV: production
+          NEXT_PUBLIC_SITE_URL: https://universe-security.org
+          NEXT_PUBLIC_SERVER_URL: https://universe-security.org
+          PAYLOAD_SECRET: build-placeholder-not-used-at-runtime
+          DATABASE_URI: file:./build.db
 
-      - name: Deploy bundle over SSH
+      - name: Pack deploy archive
+        run: tar -czf deploy.tar.gz -C godaddy-deploy .
+
+      - name: Upload archive to server
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.FASTCOMET_HOST }}
           username: ${{ secrets.FASTCOMET_USER }}
           key: ${{ secrets.FASTCOMET_SSH_KEY }}
-          source: "godaddy-deploy/*"
-          target: ${{ secrets.FASTCOMET_PATH }}
-          strip_components: 1
-          overwrite: true
+          source: deploy.tar.gz
+          target: /tmp
 
-      - name: Restart Node app
+      - name: Extract on server and restart
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.FASTCOMET_HOST }}
           username: ${{ secrets.FASTCOMET_USER }}
           key: ${{ secrets.FASTCOMET_SSH_KEY }}
           script: |
-            cd "${{ secrets.FASTCOMET_PATH }}"
-            touch tmp/restart.txt 2>/dev/null || true
-            echo "Deploy complete at $(date -u)"
+            set -e
+            APP="${{ secrets.FASTCOMET_PATH }}"
+            mkdir -p "$APP"
+            tar -xzf /tmp/deploy.tar.gz -C "$APP"
+            rm -f /tmp/deploy.tar.gz
+            mkdir -p "$APP/tmp"
+            touch "$APP/tmp/restart.txt"
+            echo "Deployed to $APP at $(date -u)"
+
+  secrets-missing:
+    runs-on: ubuntu-latest
+    if: ${{ secrets.FASTCOMET_HOST == '' || secrets.FASTCOMET_USER == '' || secrets.FASTCOMET_SSH_KEY == '' || secrets.FASTCOMET_PATH == '' }}
+    steps:
+      - run: |
+          echo "::warning::FastComet deploy skipped — add FASTCOMET_HOST, FASTCOMET_USER, FASTCOMET_SSH_KEY, FASTCOMET_PATH in GitHub repo secrets. See DEPLOY.md"

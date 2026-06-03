@@ -24,7 +24,11 @@ export npm_config_legacy_peer_deps=true
 echo "[deploy] Repository: $REPO_ROOT"
 echo "[deploy] Target app:  $APP_DIR"
 
-npm install --legacy-peer-deps
+if [ -f package-lock.json ]; then
+  npm ci --legacy-peer-deps
+else
+  npm install --legacy-peer-deps
+fi
 npm run build:fastcomet
 
 mkdir -p "$APP_DIR"

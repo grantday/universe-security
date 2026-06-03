@@ -66,16 +66,11 @@ npm run dev
 
 Single deployment with `PAYLOAD_SECRET`, Postgres `DATABASE_URI` (or JSON fallback), `NEXT_PUBLIC_SITE_URL` set to the live domain, and Resend configured. Run `npm run seed:payload` once on a fresh database if needed.
 
-### FastComet / cPanel Node.js (production)
+### FastComet (production) — push to deploy
 
-```bash
-npm run lint
-npx tsc --noEmit
-npm run build
-npm run build:godaddy
-```
+**One-time setup**, then only `git push origin main`. Full steps: **[DEPLOY.md](DEPLOY.md)**.
 
-Upload **`godaddy-deploy/`** and follow **[deploy/fastcomet/README.md](deploy/fastcomet/README.md)** (cPanel **Setup Node.js App**, startup file `start.cjs`, env vars for `universe-security.org`).
+GitHub Actions builds and uploads to your Node app (`start.cjs` on `universe-security.org`). No cPanel **Deploy HEAD Commit** or server `npm install` needed.
 
 ### GoDaddy (legacy)
 
